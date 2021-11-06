@@ -1,18 +1,3 @@
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%
-% Template per Elaborato di Laurea
-% DISI - Dipartimento di Ingegneria e Scienza dell’Informazione
-%
-% update 2015-09-10
-%
-% Per la generazione corretta del 
-% pdflatex nome_file.tex
-% bibtex nome_file.aux
-% pdflatex nome_file.tex
-% pdflatex nome_file.tex
-%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
 % formato FRONTE RETRO
 \documentclass[epsfig,a4paper,11pt,titlepage,twoside,openany]{book}
 \usepackage{epsfig}
@@ -21,39 +6,31 @@
 \usepackage[paperheight=29.7cm,paperwidth=21cm,outer=1.5cm,inner=2.5cm,top=2cm,bottom=2cm]{geometry} % per definizione layout
 \usepackage{titlesec} % per formato custom dei titoli dei capitoli
 
-%%%%%%%%%%%%%%
 % supporto lettere accentate
-%
 %\usepackage[latin1]{inputenc} % per Windows;
 \usepackage[utf8x]{inputenc} % per Linux (richiede il pacchetto unicode);
 %\usepackage[applemac]{inputenc} % per Mac.
 
 \singlespacing
 
-\usepackage[italian]{babel}
+\usepackage[english]{babel}
 
 \begin{document}
 
-  % nessuna numerazione
-  \pagenumbering{gobble} 
-  \input{pagina_iniziale}
+% nessuna numerazione
+\pagenumbering{gobble}
+\input{pagina_iniziale}
 
-  \clearpage
- 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%% Nota
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%% Sezione Ringraziamenti opzionale
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-  \input{ringraziamenti}
-  \clearpage
-  \pagestyle{plain} % nessuna intestazione e pie pagina con numero al centro
+\clearpage
 
-  
-  % inizio numerazione pagine in numeri arabi
-  \mainmatter
+% Ringraziamenti
+\input{ringraziamenti}
+\clearpage
+\pagestyle{plain} % nessuna intestazione e pie pagina con numero al centro
+
+
+% inizio numerazione pagine in numeri arabi
+\mainmatter
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -71,40 +48,36 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-    % indice
-    \tableofcontents
-    \clearpage
-    
-    
-          
-    % gruppo per definizone di successione capitoli senza interruzione di pagina
-    \begingroup
-      % nessuna interruzione di pagina tra capitoli
-      % ridefinizione dei comandi di clear page
-      \renewcommand{\cleardoublepage}{} 
-      \renewcommand{\clearpage}{} 
-      % redefinizione del formato del titolo del capitolo
-      % da formato
-      %   Capitolo X
-      %   Titolo capitolo
-      % a formato
-      %   X   Titolo capitolo
-      
-      \titleformat{\chapter}
-        {\normalfont\Huge\bfseries}{\thechapter}{1em}{}
-        
-      \titlespacing*{\chapter}{0pt}{0.59in}{0.02in}
-      \titlespacing*{\section}{0pt}{0.20in}{0.02in}
-      \titlespacing*{\subsection}{0pt}{0.10in}{0.02in}
+% indice
+\tableofcontents
+\clearpage
 
-      % abstract
-      \input{abstract}
+\input{abstract}
+\clearpage
 
-      % background
-      \input{background}
+% gruppo per definizone di successione capitoli senza interruzione di pagina
+\begingroup
+% nessuna interruzione di pagina tra capitoli
+% ridefinizione dei comandi di clear page
+\renewcommand{\cleardoublepage}{}
+\renewcommand{\clearpage}{}
+% redefinizione del formato del titolo del capitolo
+% da formato
+%   Capitolo X
+%   Titolo capitolo
+% a formato
+%   X   Titolo capitolo
 
-      % sommario
-      \input{sommario}
+\titleformat{\chapter}
+{\normalfont\Huge\bfseries}{\thechapter}{1em}{}
+
+\titlespacing*{\chapter}{0pt}{0.59in}{0.02in}
+\titlespacing*{\section}{0pt}{0.20in}{0.02in}
+\titlespacing*{\subsection}{0pt}{0.10in}{0.02in}
+
+% background
+\input{background}
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% Nota
@@ -120,28 +93,28 @@
 %%   risultati raggiunti, sottolineando il contributo personale del laureando/a
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%      
-      
-      %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-      % lista dei capitoli
-      %
-      % \input oppure \include
-      %
-      \input{capitolo1}
-      \input{capitolo2}
-      \input{capitolo3}
-      %\input{capitolo4}
-      
-      
-    \endgroup
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% lista dei capitoli
+%
+% \input oppure \include
+%
+\input{capitolo1}
+\input{capitolo2}
+\input{capitolo3}
+%\input{capitolo4}
 
 
-    % bibliografia in formato bibtex
-    %
-    % aggiunta del capitolo nell'indice
-    \addcontentsline{toc}{chapter}{Bibliografia}
-    % stile con ordinamento alfabetico in funzione degli autori
-    \bibliographystyle{plain}
-    \bibliography{biblio}
+\endgroup
+
+
+% bibliografia in formato bibtex
+%
+% aggiunta del capitolo nell'indice
+\addcontentsline{toc}{chapter}{Bibliografia}
+% stile con ordinamento alfabetico in funzione degli autori
+\bibliographystyle{plain}
+\bibliography{biblio}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% Nota
@@ -170,10 +143,10 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-    \titleformat{\chapter}
-        {\normalfont\Huge\bfseries}{Allegato \thechapter}{1em}{}
-    % sezione Allegati - opzionale
-    \appendix
-    \input{allegati}
+\titleformat{\chapter}
+{\normalfont\Huge\bfseries}{Allegato \thechapter}{1em}{}
+% sezione Allegati - opzionale
+\appendix
+\input{allegati}
 
 \end{document}

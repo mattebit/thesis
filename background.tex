@@ -1,9 +1,7 @@
-\chapter{Background} % senza numerazione
+\chapter{Background}
 \label{Background}
 
-\addcontentsline{toc}{chapter}{Sommario} % da aggiungere comunque all'indice
-
-The idea of a pentesting tool used to test SSO implementations such as OAuth, OIDC and SAML was previously discussed by my colleagues Stefano Facchini \cite{stefano_faccini}, Claudio Grisenti and Wendy Barreto, which developed a plugin in Burp, that is a toolkit for web security testing.\\
+The idea of a pentesting tool used to test SSO implementations such as OAuth, OIDC and SAML was previously discussed by my colleagues Stefano Facchini \cite{stefano_faccini}, Claudio Grisenti \cite{claudio_grisenti} and Wendy Barreto \cite{wendy_barreto}, which developed a plugin in Burp, that is a toolkit for web security testing.
 
 \section{The old plugin}
 The plugin work by executing a browser session and by doing some automatic actions defined in a track. All the messages received and sent by the browser are intercepted by the Burp's proxy. The plugin checks the messages and based on the test defined in the plugin tells if there is a vulnerability or not.
@@ -21,4 +19,5 @@ This is the last version of the plugin which i started working to. The plugin su
     \item Impossibility of saving a parameter and using it somewhere else
 \end{itemize}
 Moreover, the language was thought with OIDC and OAuth in mind, other SSO protocols such as SAML could not be tested, because of the fact that SAML parameters are encoded, so editing them or verifying them is not possible.
- 
+
+
