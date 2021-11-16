@@ -1,0 +1,10 @@
+# Wendy plugin
+
+-   It was thought focusing on testing just OAuth and OIDC deployments
+-   the biggest problem is that the language was limited in testing SSO (p.2 "Operation's main function is the search of a regex pattern inside HTTP messages exchanged during the SSO process"
+-   Wendy's objective was to design a language that allows the user to define tests in a more natural way, being able to specify tests without having to modify the code of the plugin (as it was before)
+-   p.17, Message Type in passive test can be only of 4 types
+-   p.17 In active tests the edit or deletion is only possible to parameters of the message, limiting the fact that an user could want to select various type of parameters, or just can't select encoded parameters
+-   p.17 Previous oracle was just checking the correct edit of the messages and searching that a page has "error" in it
+-   p.20 Current limitations: cannot save strings or values, cannot execute multiple operations in the same test
+-   p.29 The future works and features are all implemented by me

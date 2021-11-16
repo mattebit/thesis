@@ -5,6 +5,8 @@
 \usepackage{setspace}
 \usepackage[paperheight=29.7cm,paperwidth=21cm,outer=1.5cm,inner=2.5cm,top=2cm,bottom=2cm]{geometry} % per definizione layout
 \usepackage{titlesec} % per formato custom dei titoli dei capitoli
+\usepackage{graphicx}
+\graphicspath{{./images/}}
 
 % supporto lettere accentate
 %\usepackage[latin1]{inputenc} % per Windows;
@@ -75,34 +77,17 @@
 \titlespacing*{\section}{0pt}{0.20in}{0.02in}
 \titlespacing*{\subsection}{0pt}{0.10in}{0.02in}
 
-% background
-\input{background}
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%% Nota
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%% Sommario e' un breve riassunto del lavoro svolto dove si descrive 
-%% l’obiettivo, l’oggetto della tesi, le metodologie e 
-%% le tecniche usate, i dati elaborati e la spiegazione delle conclusioni 
-%% alle quali siete arrivati.
-%% Il sommario dell’elaborato consiste al massimo di 3 pagine e deve contenere le seguenti informazioni: 
-%%   contesto e motivazioni
-%%   breve riassunto del problema affrontato
-%%   tecniche utilizzate e/o sviluppate
-%%   risultati raggiunti, sottolineando il contributo personale del laureando/a
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%      
-
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % lista dei capitoli
 %
 % \input oppure \include
 %
-\input{capitolo1}
-\input{capitolo2}
-\input{capitolo3}
-%\input{capitolo4}
+\input{c_background}
+\input{c_design}
+\input{c_implementation}
+\input{c_related_work}
+\input{c_use_cases}
+\input{c_conclusions}
 
 
 \endgroup

@@ -1,0 +1,39 @@
+\chapter{Related work}
+
+\section{Wendy's language}
+\begin{center}
+    \begin{tabular}{ |c|c|c| }
+        \hline
+        Action                                    & Old language         & New language                             \\
+        \hline\hline
+        Custom message filtering                  & Only on active tests & supported                                \\
+        Edit string                               & only by regex        & supported with regex and check construct \\
+        Remove string                             & only by regex        & supported with regex and check construct \\
+        Add string                                & not supported        & supported                                \\
+        Check parameter                           & only with regex      & with regex and check construct           \\
+        Multiple operations in single message     & not supported        & supported                                \\
+        Saving and reusing of values and messages & not supported        & supported                                \\
+        Multiple sessions in single test          & not supported        & supported                                \\
+        Custom oracle definition                  & not supported        & by using regex and checks                \\
+        \hline
+    \end{tabular}
+\end{center}
+
+\section{The old plugin}
+The old plugin of Stefano and Claudio was based on a track, which defined some actions to be done by the browser, which was a selenium istance. The plugin checks the messages and based on the test defined in the plugin tells if there is a vulnerability or not.
+Starting from the first version of Stefano, to the last of Wendy, the plugin was improved. In the first two versions of Stefano and Claudio the plugin had its tests hard-coded, in a way that ony the supported tests could be executed, with little settings to change. If a new test had to be implemented, the plugin had to be recompiled. This version of the plugin worked well, but as said, the tests could not be customized or adapted by the user.
+
+\section{Last plugin version}
+Wendy improved the plugin by removing the staticity of the test, adding the possibility to customly define all of the tests with the use of a JSON language. \\
+This is the last version of the plugin which i started working to. The plugin supported the definition of passive and active tests: passive tests are tests where the messages are not edited, active tests are tests where there could be an edit of one or more messages. The availabe test actions worked well, but there were some limitations on the possible actions, especially in the active tests. For example:
+\begin{itemize}
+    \item Limited oracle for the verification of active tests, having just the verification of the correct execution of the operation and a check for the string "error" on the last page of the browser
+    \item The filtering of which message to check or edit for static tests was limited: ( only "Authorization grant message", "Response messages", "Request messages" and "All messages")
+    \item Only regex were supported to search something in a message
+    \item Unable to work over encoded parameters
+    \item Impossibility of doing multiple operations on a single message
+    \item Impossibility of saving a parameter and using it somewhere else
+\end{itemize}
+Some of which stated as future works in Wendy's thesis.
+Moreover, the language was thought to be used with tests for OIDC and OAuth, other SSO protocols such as SAML could not be tested, because of the fact that SAML parameters are encoded, so editing them or verifying them is not possible. This is the biggest limitation that made me decide to redesign the language.
+
