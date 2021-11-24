@@ -1,13 +1,13 @@
-\chapter{Design}
+\chapter{Design of the language}
 In the Design chapter I am going to talk about how the language and the plugin have been designed and how they work.
 
-\section{The Language}
-The idea was to think of a language that could implement all the possible actions which a security tester would be wanting to do on a multipart webapp test.\\
+\section{Introduction}
+The idea was to think of a language that could implement all the possible actions which a security tester would be wanting to do on a multipart webapp test. One of the objective was to think of a language that could define tests that could be defined once, but tested over multiple websites. For example, a series of tests to verify the well-known vulnerabilities of a particular protocol could be defined and then used on any type of website.
 I had to decide how to write and define the actual tests, i thought i could define a proper language with a dedicated parser, but it was not worth the effort, as there are already some well-tested alternatives available. I found a great alternative: i used JSON as a base over which write the tests. It is a convinient way of defining gerarchical sturctures like tests could be.
 The idea behind this language is that a specific message can be intercepted and checked or edited in some way, to do this we define various types
 The gerarchical structure and the details of the language will be discussed in the next charapter.
 
-\subsection{Test example: PKCE Downgrade}
+\section{Test example: PKCE Downgrade}
 I want to introduce the language with an example. Due to its complexity, having a real example before the explanation of all its components could be helpful to understand their use.
 The implemented test has as objective to test an OAuth vulnerability where removing the parameter "code\_challenge" from the url of an authorization request message will be downgrading the authentication proces in a way that PKCE will not be used if the service is vulnerable.
 
@@ -65,10 +65,10 @@ The next part of the example is the Message Operation at line 35, where I tell t
 The last part of the test is the definition of the result, the result is part of the evaluation of a test, in this case it is set to "incorrect flow s1", this means that I want the test to be considered passed if the execution of the session s1 is incorrect that is, if the execution of the session s1 encounters an error or an unexpected page.
 
 
-\subsection{Language structure}
+\section{Language structure}
 \includegraphics[width=\textwidth]{language_structure.png}
 
-\subsubsection{Test suite}
+\subsection{Test suite}
 The test suite is the main component which contains all the other one, it is composed by:
 \begin{itemize}
     \item Test suite name, the name of the test suite
@@ -76,7 +76,7 @@ The test suite is the main component which contains all the other one, it is com
     \item Tests, which is a list containing the tests to be executed
 \end{itemize}
 
-\subsubsection{Test}
+\subsection{Test}
 The Test object is the one that actually defines a test. As said earlier, a test is contained in a Test Suite, and has various items:
 \begin{itemize}
     \item name
@@ -90,7 +90,7 @@ The Test object is the one that actually defines a test. As said earlier, a test
 it can be defined either as an active or a passive test, depending on the type of actions it has to do on the intercepted messages. If a test doesn't need to manipulate the flow or the content of the messages, then it is considered passive, otherwise it is considered active.
 The list of Operations contained in a Test is executed iteratively one after the other.
 
-\subsubsection{Operation}
+\subsection{Operation}
 The operation object is the thing that define what a test actually does. As shown in the image above, an operation could be either a standard operation or a session config operation, the latter is used to manage the sessions for the active tests (i.e. start, stop, pause). Depending on the type of test which an Operation is defined into, the standard Operation can be active or passive.
 In both cases, an operation has to contain the \textbf{message type} which defines the type of message to be intercepted in that particular operation (more info in the dedicated paragraph).
 \\A \textbf{passive} operation has as objective to verify the presence (or absence) of some text or parameters in the intercepted message, it should contain one of the following options:
@@ -111,7 +111,7 @@ If the Test where the operations are defined is an \textbf{active} test, so if t
 
 If the action is set to "\textbf{validate}" the operation becomes like a passive operation, because its objective is just to verify that some messages are as expected. It will contain or a regex or a list of checks to be done.
 
-\subsubsection{Message Operation}
+\subsection{Message Operation}
 The message operation is the Object that actually does the manipulations on the intercepted messages. It is composed by:
 \begin{itemize}
     \item from, the message section to work on
@@ -192,19 +192,14 @@ So, if "saml request" is used in an Operation, the message having the parameter 
 
 \section{The oracle}
 The ensemble of all parts of the language that decide the result of the tests is called Oracle,
-the oracle decides whether a test should be considered passed or failed. I decided to build the oracle in a way that can be almost fully customized by the user. It is based on three main components:
-\begin{itemize}
-    \item Evaluation of the complete (or incomplete) execution of the session track 
-    \item Evaluation of the Precondition objects
-    \item Evaluation of the Validate objects
-\end{itemize}
-If all of the above conditions are met, the test is considered passed, otherwise it is considered failed.
-The oracle can be built for example using Validate objects verifying that some intercepted messages satisfy some conditions like having a particular parameter or string in them.
-To identify abnormal pages like error pages the session track evaluation should be sufficient, because if some of the actions could not be executed means that the original "flow" of pages was not followed.
+the oracle decides whether a test should be considered passed or failed. I decided to build the oracle in a way that can be almost fully customized by the user. There are various components that belong to the oracle. If we take the example from above, we can see that the test has a tag "result" which value is "incorrect flow s1", this means that the oracle will evaluate the test as passed if and only if the execution of the session track of the session s1 will be incorrect, this means that if the browser will encounter some type of page which was not meant to encounter, the test will be considered passed. With "was not meant to encounter" i mean that the actions in the session track cannot be done, because the objects to be pressed in the page are not present.
+With this check i also added the possibility to do preconditions on the tests, they are useful to check if a given test is applicable or not. For example, at line 25 in the example above, I want to consider the test "not applicable" if i can't find the parameter code\_challenge in the authorization request message. This means that is not possible to apply the given test if the preconditions are not satisfied.
+
 
 \section{Sessions}
 A session is defined by a session track, which is a series of commands that the browser will execute automatically during execution of the Tests. There is the possibility of defining and using more than one session, in a way that (i.e.) reply tests can be executed.
-As said in the previous sections, a "from session" tag can be specified in the Operation, this will tell in which of the available session search the desired message. To define the session track I have taken inspiration from the one used in the Micro Id Gym tool \cite{claudio_grisenti}\cite{stefano_faccini}, adding some options like "wait" and "clear cookies" functionalities.
+As said in the previous sections, a "from session" tag can be specified in the Operation, this will tell in which of the available session search the desired message. To define the session track I have used and extended the idea used in the Micro Id Gym tool \cite{claudio_grisenti}\cite{stefano_faccini}, adding some options like "wait" and "clear cookies" functionalities.
+The syntax of the session track is based on the plain text export of Katalon Recorder\cite{katalon_recorder_syntax}.
 An example of a session track:
 
 \begin{lstlisting}[]
@@ -224,11 +219,11 @@ An example of a session track:
 
 This session track will do the login on the Unitn website using some credentials and password. The actions supported are:
 \begin{itemize}
-    \item open | url |, to open an url
-    \item click | id=, link=, xpath= |, to click on a http object with the given id, link or xpath
-    \item type | id= | text, to write on a given http element the given text
-    \item wait | milliseconds, to make the execution of the session wait for a given time 
-    \item clear cookies |, to make the browser of the session clear all of the cookies in it
+    \item open $|$ url $|$, to open an url
+    \item click $|$ id=, link=, xpath= $|$, to click on a http object with the given id, link or xpath
+    \item type $|$ id= $|$ text, to write on a given http element the given text
+    \item wait $|$ milliseconds, to make the execution of the session wait for a given time 
+    \item clear cookies $|$, to make the browser of the session clear all of the cookies in it
 \end{itemize}
 
 

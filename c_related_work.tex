@@ -1,6 +1,9 @@
 \chapter{Related work}
+In this chapter i will talk about other tools and works that are related to mine. I will then compare them to my language.
 
-\section{Wendy's language}
+\section{SSO Testing language and Plugin}
+This is a similar plugin and language done by Wendy Barreto \cite{wendy_barreto} to test OAuth and OIDC SSO protocols in a more dinamic way. Previously in this thesis i said that I have taken part of her work which was a good base to start with my work, editing it to suit my needs. My idea of a language that could be used for any type of test over HTTP was born when I used her plugin, which was limited to OAuth and OIDC tests. I wanted to enlarge the possible tests without a restiction on a specific protocol. One of the things that I used is the interface of her plugin, adding some buttons and tabs to deal with multiple session tracks and added functionalities.
+
 \begin{center}
     \begin{tabular}{ |c|c|c| }
         \hline
@@ -19,7 +22,8 @@
     \end{tabular}
 \end{center}
 
-\section{The old plugin}
+\section{Micro ID Gym}
+Another plugin for burp that was developed by two my colleagues was Micro ID Gym, a tool to test OIDC and OAuth implementations. This plugin was used by Wendy Barreto to do her work.
 The old plugin of Stefano and Claudio was based on a track, which defined some actions to be done by the browser, which was a selenium istance. The plugin checks the messages and based on the test defined in the plugin tells if there is a vulnerability or not.
 Starting from the first version of Stefano, to the last of Wendy, the plugin was improved. In the first two versions of Stefano and Claudio the plugin had its tests hard-coded, in a way that ony the supported tests could be executed, with little settings to change. If a new test had to be implemented, the plugin had to be recompiled. This version of the plugin worked well, but as said, the tests could not be customized or adapted by the user.
 
