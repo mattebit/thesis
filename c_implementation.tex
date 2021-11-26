@@ -9,7 +9,7 @@ The standard usage of Burp Suite is based on the execution of a browser which co
 * insert image *
 
 \subsection{Test execution}
-The test execution differs from static to dinamic, as static tests don't need the the edit of the messages, the execution of the session track is done once, the messages are saved and the tests are executed on the saved messages. I have also added the possibility of exporting the saved messages to a file, in a way that they can be imported in the plugin and tested again.
+The test execution differs from static to dinamic, as static tests don't need the the edit of the messages, the execution of the \gls{session track} is done once, the messages are saved and the tests are executed on the saved messages. I have also added the possibility of exporting the saved messages to a file, in a way that they can be imported in the plugin and tested again.
 On the other hand, active tests needs to edit the messages, so the execution of the track has to be repeated for each test.
 
 \subsection{Decoding \& encoding of parameters}
@@ -20,18 +20,11 @@ In SAML Requests and responses there is sometime the need to remove or edit the 
 To do this, i used a part of the code of SAML Raider \cite{saml_raider}, editing it to fit my needs.
 
 \subsection{Oracle}
-The oracle is based on three main components:
-\begin{itemize}
-    \item Evaluation of the complete (or incomplete) execution of the session track 
-    \item Evaluation of the Precondition objects
-    \item Evaluation of the Validate objects
-\end{itemize}
-If all of the above conditions are met, the test is considered passed, otherwise it is considered failed.
-The oracle can be built for example using Validate objects verifying that some intercepted messages satisfy some conditions like having a particular parameter or string in them.
-To identify abnormal pages like error pages the session track evaluation should be sufficient, because if some of the actions could not be executed means that the original "flow" of pages was not followed.
+
+To identify abnormal pages like error pages the \gls{session track} evaluation should be sufficient, because if some of the actions could not be executed means that the original "flow" of pages was not followed.
 
 \subsection{Session managing}
-The sessions are managed independently, each session is basically a browser that is launched when a session is started. Each session can follow a different session track defined in the apposite tabs. Every session is ran in a separated thread to make parallelism possible. By the use of specific commands in the language, is possible to do some actions on each session, like stop it, pause it, or clear its cookies. Each browser uses a different proxy port, so that it is possible to know from which session the messages come from.
+The sessions are managed independently, each session is basically a browser that is launched when a session is started. Each session can follow a different \gls{session track} defined in the apposite tabs. Every session is ran in a separated thread to make parallelism possible. By the use of specific commands in the language, is possible to do some actions on each session, like stop it, pause it, or clear its cookies. Each browser uses a different proxy port, so that it is possible to know from which session the messages come from.
 
 
 

@@ -9,7 +9,7 @@
 \graphicspath{{./images/}}
 \usepackage{listings}
 \usepackage{xcolor}
-
+\usepackage{glossaries}
 
 \definecolor{codegreen}{rgb}{0,0.6,0}
 \definecolor{codegray}{rgb}{0.5,0.5,0.5}
@@ -80,6 +80,8 @@
 
 \usepackage[english]{babel}
 
+\input{glossary.tex}
+
 \begin{document}
 
 % nessuna numerazione
@@ -145,6 +147,7 @@
 %
 % \input oppure \include
 %
+\input{c_introduction.tex}
 \input{c_background}
 \input{c_design}
 \input{c_implementation}
