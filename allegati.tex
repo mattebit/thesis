@@ -19,14 +19,53 @@
 \end{center}
 
 
-\chapter{Titolo secondo allegato}
-
-Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec sed nunc orci. Aliquam nec nisl vitae sapien pulvinar dictum quis non urna. Suspendisse at dui a erat aliquam vestibulum. Quisque ultrices pellentesque pellentesque. Pellentesque egestas quam sed blandit tempus. Sed congue nec risus posuere euismod. Maecenas ut lacus id mauris sagittis egestas a eu dui. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Pellentesque at ultrices tellus. Ut eu purus eget sem iaculis ultricies sed non lorem. Curabitur gravida dui eget ex vestibulum venenatis. Phasellus gravida tellus velit, non eleifend justo lobortis eget. 
-
-\section{Titolo}
-Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec sed nunc orci. Aliquam nec nisl vitae sapien pulvinar dictum quis non urna. Suspendisse at dui a erat aliquam vestibulum. Quisque ultrices pellentesque pellentesque. Pellentesque egestas quam sed blandit tempus. Sed congue nec risus posuere euismod. Maecenas ut lacus id mauris sagittis egestas a eu dui. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Pellentesque at ultrices tellus. Ut eu purus eget sem iaculis ultricies sed non lorem. Curabitur gravida dui eget ex vestibulum venenatis. Phasellus gravida tellus velit, non eleifend justo lobortis eget. 
-
-\subsection{Sottotitolo}
-Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec sed nunc orci. Aliquam nec nisl vitae sapien pulvinar dictum quis non urna. Suspendisse at dui a erat aliquam vestibulum. Quisque ultrices pellentesque pellentesque. Pellentesque egestas quam sed blandit tempus. Sed congue nec risus posuere euismod. Maecenas ut lacus id mauris sagittis egestas a eu dui. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Pellentesque at ultrices tellus. Ut eu purus eget sem iaculis ultricies sed non lorem. Curabitur gravida dui eget ex vestibulum venenatis. Phasellus gravida tellus velit, non eleifend justo lobortis eget. 
-
+\chapter{PKCE test Example complete}
+This is the complete PKCE test example
+\begin{lstlisting}[language=json]
+{
+    "test suite": {
+        "name": "OAuth Active tests",
+        "description": "A series of tests to test OAuth's well-known vulnerabilities",
+        "filter messages": true
+    },
+    "tests": [     
+        {
+            "test": {
+                "name": "PKCE Downgrade",
+                "description": "Tries to remove code_challenge parameter",
+                "type": "active",
+                "sessions": [
+                    "s1"
+                ],
+                "operations": [
+                    {
+                        "session": "s1",
+                        "action": "start"
+                    },
+                    {
+                        "action": "intercept",
+                        "from session": "s1",
+                        "then": "forward",
+                        "message type": "authorization request",
+                        "preconditions": [
+                            {
+                                "in": "url",
+                                "check param": "code_challenge",
+                                "is present": true
+                            }
+                        ],
+                        "message operations": [
+                            {
+                                "from": "url",
+                                "remove parameter": "code_challenge"
+                            }
+                        ]
+                    }
+                ],
+                "result": "incorrect flow s1"
+            }
+        }
+    ]
+}
+\end{lstlisting}
 

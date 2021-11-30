@@ -1,12 +1,33 @@
 \chapter{Implementation}
-In this chapter I will describe the implementation of the language and the plugin, and also the problems faced and the solutions adopted.
+In this chapter I will describe the implementation of the language and the plugin, the problems faced and the solutions adopted.
 
 \section{The plugin}
-For the implementation of the Burp's plugin I have decided to start from a work done by Wendy Barreto \cite{wendy_barreto}, which did a similar plugin for OIDC and OAuth SSO protocols, this was a good base to start with my implementation. The plugin code is written in Java, I used the Burp's interface classes to interact with it.
-The standard usage of Burp Suite is based on the execution of a browser which connects to the Burp's proxy, in a way that all the packets can be intercepted, viewed or edited and forwared or dropped from the Burp interface. The tester would do some actions on the browser and watch the flowing packets in Burp and then check them or edit them. With the plugin the idea is the same, but the operation done on the browser and the checks or edits on the messages are made automatically, in a way that the tester doesn't have to do them by itself.
+For the implementation of the Burp's plugin introduced earlier, I have decided to start from a work done by my colleague Wendy Barreto \cite{wendy_barreto} in her bachelor thesis, which realized a similar plugin for OIDC and OAuth SSO protocols, this was a good base to start with my implementation. The interface of \cite{wendy_barreto} has been taken and adapted to fit the needs of this work. The plugin code is written in Java, I used the Burp's interface classes to interact with it.
+The standard usage of Burp Suite is based on the execution of a browser which connects to the Burp's proxy, in a way that all the packets can be intercepted, viewed or edited and forwarded or dropped from the Burp interface. The tester would do some actions on the browser and watch the flowing packets in Burp and then check them or edit them. With the plugin the idea is the same, but the operation done on the browser and the checks or edits on the messages are made automatically, in a way that the tester doesn't have to do them by itself.
 
-\subsection{Interface}
-* insert image *
+\subsection{The interface}
+In figure \ref{fig:plugin_interface} we can see the interface of the plugin, starting from top left we have the session track input space, where it can be specified a different track for each session. Following on the top right, wee have a series of buttons that allow various configurations:
+\begin{itemize}
+    \item the browser to be used can be selected
+    \item the driver to automate the actions on the browser can be selected
+    \item the record button can be used to record the passing messages
+    \item the load messages button can be used to load the previously saved messages to be tested "offline"
+    \item the offline mode button to test the loaded messages instead of the live ones
+\end{itemize}
+
+In the bottom we have multiple tabs:
+\begin{itemize}
+    \item "Input JSON" tab is used to load the tests written in the language into the plugin, and with the use of two buttons we can parse the language and execute the tests.
+    \item "Test suite result" is the tab containing all the results of the executed tests
+    \item "Test result" is the tab used to see the specific test result, with all the intercepted messages related to it
+    \item "Session config" is used to configure the ports of the sessions that will be used in the tests.
+\end{itemize}
+
+\begin{figure}
+    \includegraphics[width=\textwidth]{interface.png}
+    \caption{plugin interface}
+    \label{fig:plugin_interface}
+\end{figure}
 
 \subsection{Test execution}
 The test execution differs from static to dinamic, as static tests don't need the the edit of the messages, the execution of the \gls{session track} is done once, the messages are saved and the tests are executed on the saved messages. I have also added the possibility of exporting the saved messages to a file, in a way that they can be imported in the plugin and tested again.
