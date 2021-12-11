@@ -1,18 +1,18 @@
 \chapter{Related work}
-In this chapter I will talk about other tools and works that are related to mine.
-
-\section{SSO Testing language and Plugin}
-A work that is similar to mine, is the one done by my colleague Wendy Barreto \cite{wendy_barreto} in her bachelor thesis at Università di Trento to test OAuth and OIDC SSO protocols with a custom test definition pattern. Previously in this thesis I said that I have taken part of her work as a base to start with mine, editing it to suit my needs. My idea of a language that could be used for any type of test over HTTP was born when I used her plugin, which was limited to OAuth and OIDC tests. I wanted to enlarge the possible tests to be defined without a restiction on a specific protocol. 
-One of the things that I used is the interface of her plugin, adding some buttons and tabs to deal with multiple \gls{session track}s and added functionalities.
+In this chapter other tools and works that are related to mine will be discussed.
 
 \section{Micro ID Gym}
-Another plugin for burp that was developed by two my colleagues was Micro ID Gym, a tool to test OIDC and OAuth implementations. This plugin was used by Wendy Barreto to do her work.
-The old plugin of Stefano and Claudio was based on a track, which defined some actions to be done by the browser, which was a selenium istance. The plugin checks the messages and based on the test defined in the plugin tells if there is a vulnerability or not.
-Starting from the first version of Stefano, to the last of Wendy, the plugin was improved. In the first two versions of Stefano and Claudio the plugin had its tests hard-coded, in a way that ony the supported tests could be executed, with little settings to change. If a new test had to be implemented, the plugin had to be recompiled. This version of the plugin worked well, but as said, the tests could not be customized or adapted by the user.
+Micro ID Gym (MIG) "aims to assist system administrators and testers in the deployment and pen-testing of IdM protocol instances" - \cite{micro_id_gym}, inside this tool, two pentesting tool can be found:
+\begin{itemize}
+    \item MIG - OAuth/OIDC \cite{claudio_grisenti}
+    \item MIG - SAML SSO \cite{stefano_facchini}
+\end{itemize}
+They are both plugins for Burp, which have as objective to test the two different protocols. These plugins execute a series of actions on a browser, and checks the messages in the background, then they tell a result.
+These two plugins are similar to mine, but they are specifically created and defined to test SSO protocols only, and the tests that they used are fixed and cannot be easily edited, if a new test has to be implemented, the plugin has to be recompiled.
 
-\section{Last plugin version}
-Wendy improved the plugin by removing the staticity of the test, adding the possibility to customly define all of the tests with the use of a JSON language. \\
-This is the last version of the plugin which i started working to. The plugin supported the definition of passive and active tests: passive tests are tests where the messages are not edited, active tests are tests where there could be an edit of one or more messages. The availabe test actions worked well, but there were some limitations on the possible actions, especially in the active tests. For example:
+\section{SSO Testing language and Plugin}
+The preceding two plugins of MIG has been improved by a work similar to mine, the one done by my colleague Wendy Barreto \cite{wendy_barreto} in her bachelor thesis at Università di Trento to test OAuth and OIDC SSO protocols with a custom test definition pattern. Her work aimed at fixing the problem of hard-coded tests in the plugins for SSO protocols testing. The plugin had been improved by removing the staticity of the test, adding the possibility to customly define all the tests with the use of a JSON language.
+The available test actions worked well, but there were some limitations on the possible actions, especially in the active tests. For example:
 \begin{itemize}
     \item Limited oracle for the verification of active tests, having just the verification of the correct execution of the operation and a check for the string "error" on the last page of the browser
     \item The filtering of which message to check or edit for static tests was limited: ( only "Authorization grant message", "Response messages", "Request messages" and "All messages")
@@ -22,5 +22,7 @@ This is the last version of the plugin which i started working to. The plugin su
     \item Impossibility of saving a parameter and using it somewhere else
 \end{itemize}
 Some of which stated as future works in Wendy's thesis.
-Moreover, the language was thought to be used with tests for OIDC and OAuth, other SSO protocols such as SAML could not be tested, because of the fact that SAML parameters are encoded, so editing them or verifying them is not possible. This is the biggest limitation that made me decide to redesign the language.
+
+Previously in this thesis I said that I have taken part of her work as a base to start with mine, editing it to suit my needs. The idea of a language that could be used for any type of test over HTTP was born when I used her plugin, which was limited to OAuth and OIDC tests. I wanted to enlarge the possible tests to be defined without a restriction on a specific protocol. 
+One of the things that I used is the interface of her plugin, adding some buttons and tabs to deal with multiple \gls{session track}s and added functionalities. Also, the automation of the \gls{session track} was taken and edited, it actually was already used in \cite{claudio_grisenti}\cite{stefano_facchini}.
 

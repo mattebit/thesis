@@ -4,7 +4,7 @@
 In this chapter the subjects needed to comprehend the rest of the thesis will be discussed. The most common subjects will be ignored, giving a focus on the more specific and less common ones.
 
 \section{Burp Suite}
-Burp is one of the most used application security testing software for web security testing. It works by the use of a proxy server over which a browser redirect the traffic to. The proxy does like a Man In The Middle attack, taking the input traffick from the browser and replying the messages to the target service, giving also trasparency over the TSL or SSL encryption. Burp has access to the proxy, it can sniff HTTP packets and can edit them before they are forwarded to the browser or the target service. Burp also gives the possibility of creating custom plugins giving to the developers access to the java API. This is exactly how the tool will be implemented, using burp as a base over which develop the software that will be executing the tests. The tool (from now on plugin) will be able to intercept, read and edit messages that pass trough the burp's proxy by the use of Burp's API.
+Burp is one of the most used application security testing software for web security testing. It works by the use of a proxy server over which a browser redirect the traffic to. The proxy does like a Man In The Middle attack, taking the input traffick from the browser and replying the messages to the target service, giving also trasparency over the TSL or SSL encryption. Burp has access to the proxy, it can sniff HTTP packets and can edit them before they are forwarded to the browser or the target service. Burp also gives the possibility of creating custom plugins giving to the developers access to the java API. This is exactly how the tool will be implemented, using burp as a base over which develop the software that will be executing the tests. The plugin (from now on tool) will be able to intercept, read and edit messages that pass trough the burp's proxy by the use of Burp's API.
 
 \section{JSON}
 
@@ -16,13 +16,13 @@ Burp is one of the most used application security testing software for web secur
 
 
 \section{IdM protocols: SAML and OAuth}
-The so-called IdM protocols are protocols that deals with identity management. For the scope of this thesis, SAML and OAuth will be discussed, as they are used in examples and in the related works.
+The so-called IdM protocols are protocols that deals with identity management. For the scope of this thesis, SAML and OAuth 2.0 (from now on OAuth) will be discussed, as they are used in examples and in the related works.
 
 Both SAML and OAuth are Single Sign-On (SSO) protocols, that "is an authentication scheme that allows a user to log in with a single ID and password to any of several related, yet independent, software systems" - \cite{wikipedia_sso}. 
 The difference between SAML (Security Assertion Markup Language) and OAuth is how they work, but their objective is the same, to certificate the identity of a given person.
 
 \subsection{OAuth}
-As stated in \cite{ietf_oauth2}, The OAuth 2.0 authorization framework enables a third-party application to obtain limited access to an HTTP service, either on behalf of a resource owner by orchestrating an approval interaction between the resource owner and the HTTP service, or by allowing the third-party application to obtain access on its own behalf.
+As stated in \cite{ietf_oauth2}, The OAuth authorization framework enables a third-party application to obtain limited access to an HTTP service, either on behalf of a resource owner by orchestrating an approval interaction between the resource owner and the HTTP service, or by allowing the third-party application to obtain access on its own behalf.
 A series of messages has to be exchanged between the two parties in order to authenticate a resource owner that wants to access some reserved data in a service.
 
 \subsection{SAML}
