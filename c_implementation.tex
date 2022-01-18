@@ -1,9 +1,19 @@
 \chapter{Implementation}
 In this chapter I will describe the implementation of the language and the tool, the problems faced and the solutions adopted.
 
+\section{General overview of the tool}
+\begin{figure}
+    \includegraphics[width=\textwidth]{general_schema.png}
+    \caption{General schema}
+    \label{fig:general_schema}
+\end{figure}
+
+All the components of the final tool can be seen in \ref{fig:general_schema}. Burp Suite is composed by it's proxy and APIs, the tool will get all the messages from the proxy through the API, and then, will return them to the API and so, to the proxy. This way all the messages will pass trough the tool, and will made possible to make checks and edit them.
+Every browser, (one for each session) will be using a dedicated proxy, which will act like a Man In The Middle attack from the browser and the server, establishing a secure connection only on the last part of the communication to the server, making possible to see plain HTTP communications on the browser side. Each browser will be supplied with the user actions which will be taken from the session tracks specified beforehand. It is also possible to do manual user actions on the browser, in case (for example) a captcha has to be resolved. Also the session actions taken from the tests defined by the language can be supplied to the browser (for example to pause or stop it). The most important component of the tool is the Test Suite defined with the language, which is supplied to the plugin, and executed in ensemble with the sessions, giving eventually a result.
+
 \section{The tool}
-For the implementation of the Burp's tool introduced earlier, I have decided to start from a work done by my colleague Wendy Barreto \cite{wendy_barreto} in her bachelor thesis, which realized a similar tool for OIDC and OAuth SSO protocols, this was a good base to start with my implementation. The interface of \cite{wendy_barreto} has been taken and adapted to fit the needs of this work. The tool code is written in Java, I used the Burp's interface classes to interact with it.
-The standard usage of Burp Suite is based on the execution of a browser which connects to the Burp's proxy, in a way that all the packets can be intercepted, viewed or edited and forwarded or dropped from the Burp interface. The tester would do some actions on the browser and watch the flowing packets in Burp and then check them or edit them. With the tool the idea is the same, but the operation done on the browser and the checks or edits on the messages are made automatically, in a way that the tester doesn't have to do them by itself.
+For the implementation of the \Gls{burp}'s tool introduced earlier, I have decided to start from a work done by my colleague Wendy Barreto \cite{wendy_barreto} in her bachelor thesis, which realized a similar tool for \Gls{OIDC} and \Gls{OAuth} SSO protocols, this was a good base to start with my implementation. The interface of \cite{wendy_barreto} has been taken and adapted to fit the needs of this work. The tool code is written in Java, I used the \Gls{burp}'s interface classes to interact with it.
+The standard usage of \Gls{burp} is based on the execution of a browser which connects to the \Gls{burp}'s proxy, in a way that all the packets can be intercepted, viewed or edited and forwarded or dropped from the \Gls{burp} interface. The tester would do some actions on the browser and watch the flowing packets in \Gls{burp} and then check them or edit them. With the tool the idea is the same, but the operation done on the browser and the checks or edits on the messages are made automatically, in a way that the tester doesn't have to do them by itself.
 
 \subsection{Interface of the tool}
 In figure \ref{fig:plugin_interface} we can see the interface of the tool, starting from top left we have the session track input space, where it can be specified a different track for each session. Following on the top right, wee have a series of buttons that allow various configurations:
@@ -34,10 +44,10 @@ The test execution differs from passive to active, as passive tests don't need t
 On the other hand, active tests needs to edit the messages, so the execution of the track has to be repeated for each test.
 
 \subsection{Decoding \& encoding of parameters}
-As said in the previous chapter, the decoding and encoding of parameters is possible. To do that, a list of encodings to be done on the parameter has to be provided, i.e. url, base64, deflate. Once the specified message is intercepted, the parameter is taken and decoded following the order of the provided encodings list. To do that, part of the code of SAML Raider \cite{saml_raider} which did the decoding of SAML Requests and responses parameters has been used. I've taken that part of the code and edited it to fit the tool. SAML Raider is a Burp's plugin used to manage SAML certificates.
+As said in the previous chapter, the decoding and encoding of parameters is possible. To do that, a list of encodings to be done on the parameter has to be provided, i.e. url, base64, deflate. Once the specified message is intercepted, the parameter is taken and decoded following the order of the provided encodings list. To do that, part of the code of SAML Raider \cite{saml_raider} which did the decoding of \Gls{SAML} Requests and responses parameters has been used. I've taken that part of the code and edited it to fit the tool. SAML Raider is a \Gls{burp}'s plugin used to manage \Gls{SAML} certificates.
 
 \subsection{SAML certificate managing}
-In SAML Requests and responses there is sometime the need to remove or edit the certificate associated to that request or response, so, to speed up the process a specific tag in the language has been added to remove or edit the certificate signature. There is still the possibility of doing the same removal by editing the SAML request or response with a regex, but with the use of the tag is more convenient.
+In \Gls{SAML} Requests and responses there is sometime the need to remove or edit the certificate associated to that request or response, so, to speed up the process a specific tag in the language has been added to remove or edit the certificate signature. There is still the possibility of doing the same removal by editing the \Gls{SAML} request or response with a regex, but with the use of the tag is more convenient.
 In order to do this, a part of the code of SAML Raider \cite{saml_raider} has been used, edited to fit my needs.
 
 \subsection{Oracle}

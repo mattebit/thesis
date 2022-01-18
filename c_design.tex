@@ -1,13 +1,13 @@
 \chapter{Design of the testing language}
-In this chapter it will be introduced how the tool and the testing language had been designed. The idea was to think of a language that could implement all the possible actions which a security tester would be wanting to do on the messages. One of the objective was to think of a language that could define tests that could then be tested over multiple webservices. For example, a series of tests to verify the well-known vulnerabilities of a specific protocol could be defined and then used on any type of website.
-I had to decide how to write and define the tests, I thought I could define a proper language with a dedicated parser, but it was not worth the effort, as there were already some well-tested alternatives available. one of them is JSON, which has been used as a base over which write the tests. JSON is a convinient way of defining gerarchical sturctures like tests are.
+In this chapter how the tool and the testing language have been designed will be introducted. The idea was to think of a language that could implement all the possible actions which a security tester would be wanting to do on the messages. One of the objectives was to think of a language that could define tests that could then be tested over multiple webservices. For example, a series of tests to verify the well-known vulnerabilities of a specific protocol could be defined and then used on any type of website.
+I had to decide how to write and define the tests, I thought I could define a proper language with a dedicated parser, but it was not worth the effort, as there were already some well-tested alternatives available. One of them is JSON, which has been used as a base over which write the tests. JSON is a convinient way of defining gerarchical sturctures such as tests are.
 The idea behind this language is that a specific message can be intercepted and checked or edited in some way.
 The gerarchical structure and the details of the language will be discussed in this chapter.
 
 \section{Test example: PKCE Downgrade}
 I want to introduce the language with an example. Due to its complexity, having a real example before the explanation of all its components could be helpful to understand their use.
 To understand this test, a brief introduction of PKCE has to be done, as said in \cite{pkce_explanation}: The Proof Key for Code Exchange (PKCE, pronounced pixie) extension describes a technique for public clients to mitigate the threat of having the authorization code intercepted. The technique involves the client first creating a secret, and then using that secret again when exchanging the authorization code for an access token. This way if the code is intercepted, it will not be useful since the token request relies on the initial secret. 
-The PKCE Downgrade test has as objective to test an OAuth vulnerability where removing the parameter "code\_challenge" from the url of an authorization request message will be downgrading the authentication proces in a way that PKCE will not be used if the service is vulnerable \cite{pkce_downgrade}. To test this, we have to intercept the authorization request message, remove the parameter "code\_challenge" from it, and then forward it.
+The PKCE Downgrade test has as objective to test an \Gls{OAuth} vulnerability where removing the parameter "code\_challenge" from the url of an authorization request message will be downgrading the authentication proces in a way that PKCE will not be used if the service is vulnerable \cite{pkce_downgrade}. To test this, we have to intercept the authorization request message, remove the parameter "code\_challenge" from it, and then forward it.
 The complete test can be found in attachment \ref{chap:PKCE_complete}
 
 
@@ -139,24 +139,24 @@ The message operation is the Object that actually does the manipulations on the 
 In a message operation there is the possibility to specify a parameter or some text to be decoded before manipulation, to do that, specify with "decode parameter" the parameter to be decoded and with "encodings" the encodings necessary to decode the parameter. The parameter (or text) decoded, at the end of the Message operation will be encoded again automatically.
 The decoded parameter can be manipulated by means of the "\textbf{type}" tag, there is the possibility to intepreter the decoded parameter as plain text, and to edit it using some actions:
 \begin{itemize}
-    \item txt remove
-    \item txt edit
-    \item txt add
-    \item txt save
+    \item txt remove: removes the matched string from the the decoded parameter
+    \item txt edit: edits the matched string with a custom string (specified with "with")
+    \item txt add: after the matched string adds a string
+    \item txt save: saves the matched string
 \end{itemize}
 All the previous tags accept a regex, and whatever that regex matches will be edited or added or saved based on the specified tag.
 
 Another possibility is to interpret the decoded text as xml, assigning the type tag "xml".
 This way we have various possible operations to be done on the xml:
 \begin{itemize}
-    \item remove tag
-    \item remove attribute
-    \item edit tag
-    \item edit attribute
-    \item add tag
-    \item add attribute 
-    \item save tag
-    \item save attribute
+    \item remove tag: removes the specified tag
+    \item remove attribute: removes the specified attribute
+    \item edit tag: edits the specified tag
+    \item edit attribute: edits the specified attribute
+    \item add tag: adds the specified tag
+    \item add attribute: adds the specified attribute
+    \item save tag: saves the specified tag value
+    \item save attribute: saves the specified attribute value
 \end{itemize}
 
 In the PKCE example above, we have just a simple Message Operation which has to remove the parameter "code\_challenge" frome the url of the message, so the resulting Message Operation will be:
@@ -169,7 +169,7 @@ In the PKCE example above, we have just a simple Message Operation which has to 
 
 \subsection{Message type definition}
 The message type definition is needed in order to define some types of message that will be later used in the language to intercept them.
-The message type definition is not actually part of the language, but it is stored in a file in the burp folder. Anyway, the definition of the type of messages uses the same Objects as the language.
+The message type definition is not actually part of the language, but it is stored in a file in the \Gls{burp} folder. Anyway, the definition of the type of messages uses the same Objects as the language.
 A message type object is defined using these tags:
 \begin{itemize}
     \item name, the name that will be used in the language to refer to this message type
@@ -178,7 +178,7 @@ A message type object is defined using these tags:
     \item checks, a list of Check objects used to identify the message. If evaluated to true, the message is considered found
 \end{itemize}
 
-This is an example that defines the SAML request and the SAML response messages
+This is an example that defines the \Gls{SAML} request and the \Gls{SAML} response messages
 \begin{lstlisting}[language=json]
 {
     "message_types": [
@@ -207,13 +207,13 @@ This is an example that defines the SAML request and the SAML response messages
     ]
 }
 \end{lstlisting}
-The SAML request message has in its url the parameter "SAMLRequest", the SAML response message instead, has the "SAMLResponse" parameter in the body. Then, if a saml request has to be intercepted in a test, it has to be defined in the message types, and then used in the Operation.
+The \Gls{SAML} request message has in its url the parameter "SAMLRequest", the \Gls{SAML} response message instead, has the "SAMLResponse" parameter in the body. Then, if a \Gls{SAML} request has to be intercepted in a test, it has to be defined in the message types, and then used in the Operation.
 As a result, if "saml request" is used in an Operation, the message having the parameter "SAMLRequest" in his url will be intercepted and processed by the Operation.
 
 
 \section{The oracle}
 The ensemble of all parts of the language that decide the result of the tests is called Oracle,
-the oracle decides whether a test should be considered passed or failed (or not applicable). I decided to build the oracle in a way that can be almost fully customized by the user. 
+whcih decides whether a test should be considered passed or failed (or not applicable). I decided to build the oracle in a way that can be almost fully customized by the user. 
 The oracle is based on three main components:
 \begin{itemize}
     \item Evaluation of the complete (or incomplete) execution of the \gls{session track} 
@@ -223,7 +223,7 @@ The oracle is based on three main components:
 If all the above conditions are met, the test is considered passed, otherwise it is considered failed.
 The oracle can be built for example by using Validate objects to verify that some intercepted messages satisfy some conditions like having a particular parameter or string in them.
 
-From the PKCE example above, both the result of the test and the precondition as been used:
+To build the oracle for the PKCE example above, both the result of the test and the precondition has been used:
 \begin{lstlisting}[language=json]
 "preconditions": [
     {
@@ -241,7 +241,7 @@ The result tag of the Test in the PKCE example is set to:
 this means that the oracle will evaluate the test as passed if and only if the execution of the \gls{session track} of the session s1 will be incorrect, this means that if the browser will encounter some type of page which was not meant to encounter, the test will be considered passed. With "was not meant to encounter" I mean that the actions in the \gls{session track} cannot be done, because the objects that should be pressed in the page are not present, this happens for example if an error page is displayed, which tells us the service is not vulnerable to the Test, so the test is passed.
 
 \section{Sessions}
-A session is a browser executing a \gls{session track}, which is a list of user actions that the browser will execute automatically during execution of the Tests. There is the possibility of defining and using more than one session, in a way that (i.e.) reply tests can be executed.
+A session is a browser executing a \gls{session track}, a \gls{session track} is a list of user actions that the browser will simulate automatically during execution of the Tests. There is the possibility of defining and using more than one session, in a way that (i.e.) reply tests can be executed. Different sessions can have different session tracks
 As said in the previous sections, a "from session" tag can be specified in the Operation, this will tell in which of the available session search the desired message. To define the \gls{session track} I have used and extended the idea used in \cite{giulio_pellizzari}\cite{claudio_grisenti}\cite{stefano_facchini}, adding some options like "wait" and "clear cookies" functionalities.
 The syntax of the \gls{session track} is based on the plain text export of Katalon Recorder\cite{katalon_recorder_syntax}.
 An example of a \gls{session track} that does the login at unitn.it:
