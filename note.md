@@ -8,3 +8,8 @@
 -   p.17 Previous oracle was just checking the correct edit of the messages and searching that a page has "error" in it
 -   p.20 Current limitations: cannot save strings or values, cannot execute multiple operations in the same test
 -   p.29 The future works and features are all implemented by me
+
+# to talk
+
+talk about this thing
+Note for the definition of the track: to have a successfull oracle i suggest to define a track that not only does the login of the user, but also performs some actions on the final page, this way the result of the track is more complete. (i.e. if we just tell to login, the track will not try to act on the logged page, this way the plugin has no clue on if the final page contains an error or not)

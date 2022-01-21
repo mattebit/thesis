@@ -1,8 +1,8 @@
 \chapter{Design of the testing language}
-In this chapter how the tool and the testing language have been designed will be introducted. The idea was to think of a language that could implement all the possible actions which a security tester would be wanting to do on the messages. One of the objectives was to think of a language that could define tests that could then be tested over multiple webservices. For example, a series of tests to verify the well-known vulnerabilities of a specific protocol could be defined and then used on any type of website.
-I had to decide how to write and define the tests, I thought I could define a proper language with a dedicated parser, but it was not worth the effort, as there were already some well-tested alternatives available. One of them is JSON, which has been used as a base over which write the tests. JSON is a convinient way of defining gerarchical sturctures such as tests are.
+In this chapter how the tool and the testing language have been designed will be introduced. The idea was to think of a language that could implement all the possible actions which a security tester would be wanting to do on the messages. One of the objectives was to think of a language that could define tests that could then be tested over multiple web services. For example, a series of tests to verify the well-known vulnerabilities of a specific protocol could be defined and then used on any type of website.
+I had to decide how to write and define the tests, I thought I could define a proper language with a dedicated parser, but it was not worth the effort, as there were already some well-tested alternatives available. One of them is JSON, which has been used as a base over which write the tests. JSON is a convenient way of defining hierarchical structures such as tests are.
 The idea behind this language is that a specific message can be intercepted and checked or edited in some way.
-The gerarchical structure and the details of the language will be discussed in this chapter.
+The hierarchical structure and the details of the language will be discussed in this chapter.
 
 \section{Test example: PKCE Downgrade}
 I want to introduce the language with an example. Due to its complexity, having a real example before the explanation of all its components could be helpful to understand their use.
@@ -20,7 +20,7 @@ The complete test can be found in attachment \ref{chap:PKCE_complete}
 Each object of the language is a JSON object which can contain different possible tags based on its type.
 \begin{figure}
     \includegraphics[width=\textwidth]{language_structure.png}
-    \caption{language structure}
+    \caption{Language structure}
     \label{fig:language_structure}
 \end{figure}
 
@@ -32,9 +32,9 @@ The test suite is the main Object which contains all the other one, it has these
     \item description, the description of the test suite
     \item tests, which is a list containing the tests to be executed
 \end{itemize}
-Reffering to the test example above, the definition of the test suite for it is:
+Referring to the test example above, the definition of the test suite for it is:
 
-\begin{lstlisting}[language=json]
+\begin{lstlisting}[language=json, caption=Test Suite definition]
 {
     "test suite": {
         "name": "OAuth active tests",
@@ -51,7 +51,7 @@ Reffering to the test example above, the definition of the test suite for it is:
 As we can see, the Test Suite Object is a JSON object having the tag "test suite", with name and description, and a tag "tests" which will contain a list of Test Objects.
 
 \subsection{Test}
-Following the gerarchical order, the Test object is the one that actually defines a test. As said earlier, a test is contained in a Test Suite, and has various tags to be defined:
+Following the hierarchical order, the Test object is the one that actually defines a test. As said earlier, a test is contained in a Test Suite, and has various tags to be defined:
 \begin{itemize}
     \item name
     \item description
@@ -66,7 +66,7 @@ The list of Operation Objects contained in a Test is executed iteratively one af
 
 Following the PKCE example above, we define an active Test:
 
-\begin{lstlisting}[language=json]
+\begin{lstlisting}[language=json, caption=Active test definition]
 {
     "test": {
         "name": "PKCE Downgrade",
@@ -98,7 +98,7 @@ If the Test where the operations are defined is an \textbf{active} test, also if
 \begin{itemize}
     \item action, the action it has to do (intercept, validate)
     \item from session, from which session to expect the message to be intercepted
-    \item then, the action to to after the receiving and manipulation of the message (forward or drop)
+    \item then, the action to do after the receiving and manipulation of the message (forward or drop)
     \item replace request (or response), specify a previously saved message in order to replace it to the intercepted one
     \item preconditions, a list of Precondition objects
     \item message operations, a list of Message Operation objects, which will do the actual manipulation of the intercepted message
@@ -108,7 +108,7 @@ If the action is set to "\textbf{validate}" the operation becomes like a passive
 
 In the PKCE example above, we define an Operation Object for an active test. This Operation has to intercept the "authorization request" message from session "s1", it has to check some Preconditions over it and then do some Message Operations. At the end the message is forwarded. More details on preconditions and Message operations in the next sections.
 
-\begin{lstlisting}[language=json]
+\begin{lstlisting}[language=json, caption=Operation definition]
 {
     "action": "intercept",
     "from session": "s1",
@@ -123,31 +123,74 @@ In the PKCE example above, we define an Operation Object for an active test. Thi
 }
 \end{lstlisting}
 
+\subsection{Message section}
+The message section specifies in what part of the message execute the given action to. The possible message sections are:
+\begin{itemize}
+    \item \textbf{url} only for request messages, is the message without the head and body parts
+    \item \textbf{head} it is the message without url and body parts
+    \item \textbf{body} it is the message without url and head parts
+\end{itemize}
+
+\subsection{Check Object}
+The Check Object is used in Operations and other Objects to verify that, in a message, some circumstances are satisfied. For example, it can be used to check that a specific parameter in the url of a message should be equal to a specific string.
+The Check Object is defined by:
+\begin{itemize}
+    \item \textbf{in} where to search the given parameter (head, body or url)
+    \item \textbf{check param} specify the parameter name to be searched
+\end{itemize}
+And the actual checks on the parameter value: (if none of these are specified, the Check will only check if the given parameter is present or not)
+\begin{itemize}
+    \item \textbf{is} the parameter value is exactly what is passed to this tag
+    \item \textbf{not is} the parameter value is not what is passed to this tag
+    \item \textbf{contains} 
+    \item \textbf{not contains}
+    \item \textbf{is present}
+\end{itemize}
+
+Note that by how the logic of the language has been thought, to consider a test passed, all the check Objects has to be evaluated to true. For example, if a parameter should not be present in a given message, the check that has to be done is the one that verify that the parameter is \textbf{not} present. This means that the Check objects should not be thought like an "if then else" construct. If the Check is evaluated to false, the test will not pass.
+
+\subsection{Precondition and validate Objects}
+Check Objects in active tests will not work as in passive tests, there is another way of using them: using Precondition, which is basically a list of the Check Objects. Another type of use is with the validate option in an Operation Object, which will make possible to use Checks to validate a given message. This difference of Check Objects between active and passive tests has been done to allow the Oracle to work, differentiating between a precondition and a validation.
+\paragraph{Precondition}
+Preconditions are used in an operation of an active test to check something in the intercepted message before the execution of the message operations. If the Check objects in the precondition are evaluated to false, the test is considered unsupported, not failed. More precisely the preconditions will be a list of Check Objects. This can be useful in case that it is not known if a given test is "compatible" with a given web service. For example if the service doesn't use some type of protocol, we can assure this by the use of preconditions, checking for the presence of common parameters of the protocol. Preconditions can be also regex.
+\paragraph{Validate}
+In an Operation Object the only way to use Check objects is by setting the "action" tag to "validate", this will transform the Operation in a Validate Operation. This Validate Operation will be used by the Oracle to decide whether the test should be considered passed or not. Validate Operation has to be used when we want to check that something in a message is like we expect, if it is not, the result of the test will be considered failed.
+We can use the Validate Operation with a list of checks or a regex (exactly like in passive tests).
+
+\subsection{Save}
+A message or a string can be saved by the use of the tag "save", this can be used both in an Operation, to save an entire message, and in a Message Operation to save the value of a found parameter. So a variable can be a message-type variable, containing an entire saved message, or it can be a string-type, containing a string.
+There are two ways of using the value of a variable which depends on its type:
+\begin{itemize}
+    \item Using a \textbf{message-type} variable: it can be used in an Operation with the tag "action" set to intercept. There is the possibility of using "replace request" (or "replace response") tag giving the name of the variable. This will replace the intercepted message's request (or response) with the message saved in the variable.
+    \item Using a \textbf{string-type} variable: can be used in Message Operations, where a parameter has to be edited, writing "use" tag specifying the name of the variable to use. This will use the value in that variable in the way specified by the other tags (i.e. "edit" or "add")
+\end{itemize}
+
 \subsection{Message Operation}
 The message operation is the Object that actually does the manipulations on the intercepted messages. It is composed by these tags:
 \begin{itemize}
     \item from, the message section to work on
     \item decode parameter (optional) it indicates which parameter or string to be decoded before processed
     \item encodings (optional) the list of encodings to be applied to the parameter or text to be decoded. The supported encodings are base64, deflate, url
-    \item remove match word (optional), remove text from te specified section in the matched message, it uses a regex
+    \item remove match word (optional), remove text from the specified section in the matched message, it uses a regex
     \item edit, edit the matched text
     \item save, (optional) used to save an entire message in a variable in a way it can be used in future operations
     \item add, (optional) add some text after the matched text
     \item type (optional) specify the type of edit you want to do over a decoded parameter
 \end{itemize}
 
-In a message operation there is the possibility to specify a parameter or some text to be decoded before manipulation, to do that, specify with "decode parameter" the parameter to be decoded and with "encodings" the encodings necessary to decode the parameter. The parameter (or text) decoded, at the end of the Message operation will be encoded again automatically.
-The decoded parameter can be manipulated by means of the "\textbf{type}" tag, there is the possibility to intepreter the decoded parameter as plain text, and to edit it using some actions:
+In a message operation there is the possibility to specify a parameter or some text to be decoded before manipulation, to do that, specify with "decode parameter" the parameter to be decoded and with "encodings" the encodings necessary to decode the parameter. The order of definition of the 'encodings' will be followed for decoding. The parameter (or text) decoded, at the end of the Message operation will be encoded again automatically.
+The decoded parameter can be manipulated by means of the "\textbf{type}" tag, there is the possibility to interpreter the decoded parameter as plain text, and to edit it using some actions:
 \begin{itemize}
-    \item txt remove: removes the matched string from the the decoded parameter
+    \item txt remove: removes the matched string from the decoded parameter
     \item txt edit: edits the matched string with a custom string (specified with "with")
     \item txt add: after the matched string adds a string
     \item txt save: saves the matched string
 \end{itemize}
 All the previous tags accept a regex, and whatever that regex matches will be edited or added or saved based on the specified tag.
 
-Another possibility is to interpret the decoded text as xml, assigning the type tag "xml".
-This way we have various possible operations to be done on the xml:
+\paragraph{Type xml}
+Another possibility is to interpret the decoded text as xml, to do this, type tag has to be set to "xml".
+This way we have various possible operations to be done on the decoded xml:
 \begin{itemize}
     \item remove tag: removes the specified tag
     \item remove attribute: removes the specified attribute
@@ -159,13 +202,28 @@ This way we have various possible operations to be done on the xml:
     \item save attribute: saves the specified attribute value
 \end{itemize}
 
-In the PKCE example above, we have just a simple Message Operation which has to remove the parameter "code\_challenge" frome the url of the message, so the resulting Message Operation will be:
-\begin{lstlisting}[language=json]
+In the PKCE example above, we have just a simple Message Operation which has to remove the parameter "code\_challenge" from the url of the message, so the resulting Message Operation will be:
+\begin{lstlisting}[language=json, caption=Message Operation definition]
 {
     "from": "url",
     "remove parameter": "code_challenge"
 }
 \end{lstlisting}
+
+\paragraph{Note for body section in message operations}
+If the 'body' section is chosen, the meaning of the following tags becomes different:
+\begin{itemize}
+    \item 'remove parameter' will work like 'remove match word', in a way that the value of the tag is treated as a regex which will be matching against the entire body section, having all the matches will be removed
+    \item 'edit' is treated as a regex, substituting everything that matches that regex with the value specified in the 'in' tag
+    \item 'save' is treated as a regex, saving what will be matched by the regex, the name of the variable in which the value will be saved is specified with 'as' tag
+    \item 'add' is associated with a regex, and will add at the end of the matched text the value specified by 'this' tag
+\end{itemize}
+
+This changes also for the "decode parameter" tag, in a way that if the message section is 'body' the "decode param" will accept a regex, and everything matched by that regex will be considered to be decoded. An example of a regex to match a parameter in the body could be 
+\verb|(?<=SAMLResponse=)[^$\n& ]*|
+that will search for the text "SAMLResponse", taking everything after the "=" until end of line or "\&" or whitespace is found
+
+This difference of the tag meaning is due to the difficulty of identifying parameters in the body section in contrast to the head section. In fact, while the head section is based on the HTTP standard, having all parameters defined like "Name: content" the body section could contain any type of content. To manage this variety of contents the decision of using regex instead parameter names for the body section has been chosen.
 
 \subsection{Message type definition}
 The message type definition is needed in order to define some types of message that will be later used in the language to intercept them.
@@ -179,7 +237,7 @@ A message type object is defined using these tags:
 \end{itemize}
 
 This is an example that defines the \Gls{SAML} request and the \Gls{SAML} response messages
-\begin{lstlisting}[language=json]
+\begin{lstlisting}[language=json, caption=Message Types definition]
 {
     "message_types": [
         {
@@ -213,7 +271,7 @@ As a result, if "saml request" is used in an Operation, the message having the p
 
 \section{The oracle}
 The ensemble of all parts of the language that decide the result of the tests is called Oracle,
-whcih decides whether a test should be considered passed or failed (or not applicable). I decided to build the oracle in a way that can be almost fully customized by the user. 
+which decides whether a test should be considered passed or failed (or not applicable). I decided to build the oracle in a way that can be almost fully customized by the user. 
 The oracle is based on three main components:
 \begin{itemize}
     \item Evaluation of the complete (or incomplete) execution of the \gls{session track} 
@@ -224,7 +282,7 @@ If all the above conditions are met, the test is considered passed, otherwise it
 The oracle can be built for example by using Validate objects to verify that some intercepted messages satisfy some conditions like having a particular parameter or string in them.
 
 To build the oracle for the PKCE example above, both the result of the test and the precondition has been used:
-\begin{lstlisting}[language=json]
+\begin{lstlisting}[language=json, caption=Precondition definition]
 "preconditions": [
     {
         "in": "url",
@@ -246,7 +304,7 @@ As said in the previous sections, a "from session" tag can be specified in the O
 The syntax of the \gls{session track} is based on the plain text export of Katalon Recorder\cite{katalon_recorder_syntax}.
 An example of a \gls{session track} that does the login at unitn.it:
 
-\begin{lstlisting}[]
+\begin{lstlisting}[caption=Session track Unitn login]
     open | https://www.google.com/ |
     click | id=L2AGLb |
     click | link=Accedi |
@@ -267,7 +325,7 @@ This \gls{session track} will do the login on the Unitn website using some crede
     \item click $|$ id=, link=, xpath= $|$, to click on a http object with the given id, link or xpath
     \item type $|$ id= $|$ text, to write on a given http element the given text
     \item wait $|$ milliseconds, to make the execution of the session wait for a given time 
-    \item clear cookies $|$, to make the browser of the session clear all of the cookies in it
+    \item clear cookies $|$, to make the browser of the session clear all the cookies in it
 \end{itemize}
 
 

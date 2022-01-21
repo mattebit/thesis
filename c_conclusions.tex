@@ -1,5 +1,12 @@
 \chapter{Conclusions, Limitations and Future Works}
-One of the biggest limitations that the tool has is the session track actions automations, it often happens that some captcha are encountered during execution, making impossible to proceed. Moreover, the track execution is limited, there is only a possible flow of actions (the one defined) and there is not the possibility of inserting if then else constructs that could help to differentiate the actions based on the actual page or popup. For example, it could happen that an "limited time offer" popup could appear in a website only in a particular time, the execution of the session track could be compromised by that, making impossible to distinguish wether the test failed because of the tested vulnerability or the actual popup.
+One of the biggest limitations that the tool has is the session track actions automations, it often happens that some captcha is encountered during execution, making impossible to proceed. Moreover, the track execution is limited, there is only a possible flow of actions (the one defined) and there is not the possibility of inserting if then else constructs that could help to differentiate the actions based on the actual page or popup. For example, it could happen that a "limited time offer" popup could appear in a website only in a particular time, the execution of the session track could be compromised by that, making impossible to distinguish whether the test failed because of the tested vulnerability or the actual popup.
+
+\section{Problems and limitations encountered}
+During the implementation and the testing of the tool multiple problems have been encountered, some of which are still not solved. The most relevant ones will be discussed next:
+
+\subsection{Automation problems}
+The automation part of the tool is sometimes limited, because the session track has to been defined over a specific website, doing a set of action that is directly correlated to the website. Whenever the website is changed somehow, for example the IDs or the position of some button to be clicked, the execution will fail, because the track could not continue.
+This is still not resolved, as no methods to make the track more dynamic has been found yet. This also means that every different web service which has to be tested will need a different session track to be defined.
 
 
 

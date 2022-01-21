@@ -1,0 +1,12 @@
+encodings
+url
+PKCE
+txt
+SAMLResponse
+SAMLRequest
+Katalon
+unitn
+Unitn
+xpath
+http
+IdM
