@@ -300,7 +300,7 @@ this means that the oracle will evaluate the test as passed if and only if the e
 
 \section{Sessions}
 A session is a browser executing a \gls{session track}, a \gls{session track} is a list of user actions that the browser will simulate automatically during execution of the Tests. There is the possibility of defining and using more than one session, in a way that (i.e.) reply tests can be executed. Different sessions can have different session tracks
-As said in the previous sections, a "from session" tag can be specified in the Operation, this will tell in which of the available session search the desired message. To define the \gls{session track} I have used and extended the idea used in \cite{giulio_pellizzari}\cite{claudio_grisenti}\cite{stefano_facchini}, adding some options like "wait" and "clear cookies" functionalities.
+As said in the previous sections, a "from session" tag can be specified in the Operation, this will tell in which of the available session search the desired message. To define the \gls{session track} I have used and extended the idea used in \cite{giulio_pellizzari,claudio_grisenti,stefano_facchini}, adding some options like "wait" and "clear cookies" functionalities.
 The syntax of the \gls{session track} is based on the plain text export of Katalon Recorder\cite{katalon_recorder_syntax}.
 An example of a \gls{session track} that does the login at unitn.it:
 
@@ -329,4 +329,4 @@ This \gls{session track} will do the login on the Unitn website using some crede
 \end{itemize}
 
 
-
+ 

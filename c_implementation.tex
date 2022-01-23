@@ -40,11 +40,11 @@ In the bottom we have multiple tabs:
 \end{figure}
 
 \subsection{Test execution}
-The test execution differs from passive to active, as passive tests don't need the edit of the messages, the execution of the \gls{session track} is done once, the messages are saved and the tests are executed on the saved messages. I have also added the possibility of exporting the saved messages to a file, in a way that they can be imported in the tool and tested again.
+The test execution differs from passive to active, as passive tests do not need the edit of the messages, the execution of the \gls{session track} is done once, the messages are saved and the tests are executed on the saved messages. I have also added the possibility of exporting the saved messages to a file, in a way that they can be imported in the tool and tested again.
 On the other hand, active tests needs to edit the messages, so the execution of the track has to be repeated for each test.
 
 \subsection{Decoding \& encoding of parameters}
-As said in the previous chapter, the decoding and encoding of parameters is possible. To do that, a list of encodings to be done on the parameter has to be provided, i.e. url, base64, deflate. Once the specified message is intercepted, the parameter is taken and decoded following the order of the provided encodings list. To do that, part of the code of SAML Raider \cite{saml_raider} which did the decoding of \Gls{SAML} Requests and responses parameters has been used. I've taken that part of the code and edited it to fit the tool. SAML Raider is a \Gls{burp}'s plugin used to manage \Gls{SAML} certificates.
+As said in the previous chapter, the decoding and encoding of parameters is possible. To do that, a list of encodings to be done on the parameter has to be provided, i.e. url, base64, deflate. Once the specified message is intercepted, the parameter is taken and decoded following the order of the provided encodings list. To do that, part of the code of SAML Raider \cite{saml_raider} which did the decoding of \Gls{SAML} Requests and responses parameters has been used. That part of the code has been taken and edited to fit the tool. SAML Raider is a \Gls{burp}'s plugin used to manage \Gls{SAML} certificates.
 
 \subsection{SAML certificate managing}
 In \Gls{SAML} Requests and responses there is sometime the need to remove or edit the certificate associated to that request or response, so, to speed up the process a specific tag in the language has been added to remove or edit the certificate signature. There is still the possibility of doing the same removal by editing the \Gls{SAML} request or response with a regex, but with the use of the tag this becomes more convenient.

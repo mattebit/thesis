@@ -10,6 +10,7 @@
 \usepackage{listings}
 \usepackage{xcolor}
 \usepackage{glossaries}
+\usepackage{hyperref}
 
 \definecolor{codegreen}{rgb}{0,0.6,0}
 \definecolor{codegray}{rgb}{0.5,0.5,0.5}
@@ -127,13 +128,13 @@
 % nessuna interruzione di pagina tra capitoli
 % ridefinizione dei comandi di clear page
 \renewcommand{\cleardoublepage}{}
-\renewcommand{\clearpage}{}
+%\renewcommand{\clearpage}{}
 % redefinizione del formato del titolo del capitolo
 % da formato
 %   Capitolo X
 %   Titolo capitolo
 % a formato
-%   X   Titolo capitolo
+%   X   Titolo capitolo 
 
 \titleformat{\chapter}
 {\normalfont\Huge\bfseries}{\thechapter}{1em}{}
@@ -147,18 +148,23 @@
 %
 % \input oppure \include
 %
+\printglossary
 \input{c_introduction.tex}
+\clearpage 
 \input{c_background}
+\clearpage
 \input{c_design}
+\clearpage
 \input{c_implementation}
+\clearpage
 \input{c_use_cases}
+\clearpage
 \input{c_related_work}
+\clearpage
 \input{c_conclusions}
 
 
-\endgroup
-
-
+\endgroup 
 % bibliografia in formato bibtex
 %
 % aggiunta del capitolo nell'indice
