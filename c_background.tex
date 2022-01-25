@@ -2,11 +2,11 @@
 In this chapter the subjects needed to comprehend the rest of the thesis will be discussed. The most common subjects will be ignored, giving a focus on the more specific and less common ones.
 
 \section{Burp Suite community edition}
-Burp Suite Community Edition (from now on \Gls{burp}) is one of the most used application security testing software for web security testing. It works by the use of a proxy server over which a browser redirects the traffic to. The proxy does like a Man In The Middle attack, taking the input traffic from the browser and replying the messages to the target service, giving also transparency over the TSL or SSL encryption. \Gls{burp} has access to the proxy, it can sniff HTTP packets and can edit them before they are forwarded to the browser or the target service. \Gls{burp} also gives the possibility of creating custom plugins giving to the developers access to the java API. This is exactly how the tool will be implemented, using \Gls{burp} as a base over which develop the software that will be executing the tests. The plugin (from now on tool) will be able to intercept, read and edit messages that pass through the \Gls{burp}'s proxy by the use of \Gls{burp}'s API.
+Burp Suite Community Edition (from now on \Gls{burp}) is one of the most used application security testing software for web security testing. It works by the use of a proxy server over which a browser redirects the traffic to. The proxy does like a Man In The Middle attack, taking the input traffic from the browser and replying the messages to the target service, giving also transparency over the TSL (Transport Layer Security) or SSL (Secure Socket Layer) encryption. \Gls{burp} has access to the proxy, it can sniff HTTP packets and can edit them before they are forwarded to the browser or the target service. \Gls{burp} also gives the possibility of creating custom plugins giving to the developers access to the java API. This is exactly how the tool will be implemented, using \Gls{burp} as a base over which develop the software that will execute the tests. The plugin (from now on tool) will be able to intercept, read and edit messages that pass through the \Gls{burp}'s proxy by the use of \Gls{burp}'s API.
 
 \section{Regex}
-Regex stands for regular expression, it is a sequence of symbols that define an ensemble of strings that can be matched by it. There is a list of symbols that can be used to specify what characters to match. For example if we want to find the value of the "Host" header in an HTTP message, we want to define a regex like this one: \verb|Host:\s?.*|
-This regex will search for the string "Host:" followed by 0 or 1 whitespace, and all the characters that follows until "\verb|\n|" has found. This is a complete explanation of the symbols used in this example:
+Regex stands for regular expression, it is a sequence of symbols that define an ensemble of strings that can be matched by it. There is a list of symbols that can be used to specify which characters to match. For example, if we want to find the value of the "Host" header in an HTTP message, we want to define a regex like this one: \verb|Host:\s?.*|
+This regex will search for the string "Host:" followed by 0 or 1 whitespace, and all the characters that follow until "\verb|\n|" is found. This is a complete explanation of the symbols used in this example:
 \begin{itemize}
     \item \verb|\s| is the whitespace character
     \item \textbf{?} is an operator that tells that the preceding symbol will be matched 0 or 1 times
@@ -15,13 +15,13 @@ This regex will search for the string "Host:" followed by 0 or 1 whitespace, and
 \end{itemize}
 
 \section{IdM protocols: SAML and OAuth}
-The so-called IdM protocols are protocols that deals with identity management. For the scope of this thesis, SAML and \Gls{OAuth} 2.0 (from now on \Gls{OAuth}) will be discussed, as they are used in the examples and in the related works.
+The so-called IdM protocols are protocols that deals with identity management. For the aim of this thesis, \gls{SAML} (Security Assertion Markup Language) and \Gls{OAuth} 2.0 (from now on \Gls{OAuth}) will be discussed, as they are used in the examples and in related works.
 
 Both \Gls{SAML} and \Gls{OAuth} are Single Sign-On (SSO) protocols, they follow an authentication scheme that allows a user to log in with a single ID and password to any of several related, yet independent, software systems, a more complete explanation can be found in \cite{claudio_grisenti}. 
-The difference between \Gls{SAML} (Security Assertion Markup Language) and \Gls{OAuth} is how they work, but their objective is the same, to certificate the identity of a given person in different circumstances.
+The difference between \Gls{SAML} and \Gls{OAuth} is how they work, but their objective is the same: to certificate the identity of a given person in different circumstances.
 
 \subsection{OAuth}
-As stated in \cite{ietf_oauth2}, The \Gls{OAuth} authorization framework enables a third-party application to obtain limited access to an HTTP service, either on behalf of a resource owner by orchestrating an approval interaction between the resource owner and the HTTP service, or by allowing the third-party application to obtain access on its own behalf.
+As stated in \cite{ietf_oauth2}, the \Gls{OAuth} authorization framework enables a third-party application to obtain limited access to an HTTP service, either on behalf of a resource owner by orchestrating an approval interaction between the resource owner and the HTTP service, or by allowing the third-party application to obtain access on its own behalf.
 A series of messages has to be exchanged between the two parties in order to authenticate a resource owner that wants to access some reserved data in a service.
 
 \subsection{SAML - Security Assertion Markup Language}
