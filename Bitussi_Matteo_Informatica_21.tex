@@ -72,10 +72,17 @@
       {]}{{{\color{delim}{]}}}}{1},
 }
 
+\newglossarystyle{mystyle}{
+    \glossarystyle{long}
+    \renewenvironment{theglossary}
+        {\begin{longtable}{p{3cm}p{\glsdescwidth}}}
+        {\end{longtable}}
+}
+
 % supporto lettere accentate
 %\usepackage[latin1]{inputenc} % per Windows;
 \usepackage[utf8x]{inputenc} % per Linux (richiede il pacchetto unicode);
-%\usepackage[applemac]{inputenc} % per Mac.
+%\usepackage[applemac]{inputenc} % per Mac. 
 
 \singlespacing
 
@@ -148,7 +155,7 @@
 %
 % \input oppure \include
 %
-\printglossary
+\printglossary[style=mystyle]
 \input{c_introduction.tex}
 \clearpage 
 \input{c_background}

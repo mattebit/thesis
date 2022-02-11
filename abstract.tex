@@ -1,8 +1,16 @@
 \chapter*{Abstract} % senza numerazione
 
 \addcontentsline{toc}{chapter}{Abstract} % da aggiungere comunque all'indice
-This thesis covers the work started in my internship at Fondazione Bruno Kessler (FBK) in the context of Single-Sign-On (\gls{SSO}) protocols testing. SSO protocols are becoming more and more popular these days, and are being used in very sensitive applications such as SPID (Sistema Pubblico di Identità Digitale) an Italian identity management system, or CIE (Carta di Identità Elettronica) whcih is a digital ID card. Considering the vast number of different implementations that are being used from whatever type of service, there is the need to test them in order to ensure that (at least) the most common known vulnerabilities are avoided.\\
-To avoid having to manually test each implementation, an automatic tool is necessary. Moreover, a standard language to define these tests has to be defined.
-This is what will be shown in this thesis. 
+% L'abstract deve essere un riassunto dell'introduzione, contesto, motivazione, contributi
+This thesis covers the work started in my internship at Fondazione Bruno Kessler (FBK) in the context of HTTP browser based protocol testing.
+In the last years, there was a constant raising number of services that are transitioning from physical to virtual, for instance, health care services and government services. This was done to simplify some procedures, and so, making them faster to be accomplished. But, some concerns arise from this transition, a high quantity of sensitive data could be at risk to unwanted access. Software and security engineers have to implement the service's software, and they have to manage the data that the software is working with. They will rely on HTTP security protocols to assure the user identity, to secure the connection between the service and the user, and to assure data integrity. 
+
+To make sure all these security requirements are met in the implementation of the service, there is the need to test the implemented services against the well-known vulnerabilities of the protocols used. Usually, to do that, a software engineer or a security tester, which will be called tester, is going to act like an attacker that is trying to see, edit, deny the access to the data in the services. A software will intercept the HTTP messages between service and the tester's browser, and it will make possible for the tester to edit or remove the messages, to simulate an attack and see if the service is vulnerable. The tester will have to gather all the well-known vulnerabilities related to the used protocols and test them manually. This is very time-consuming, and could be done improperly if the tester is not qualified to do it. This is why a software that can automatically test the services against the well known-vulnerabilities and that could give a result of whether the services are vulnerable or not is needed. The advantages are that the group of people that could test the implemented services could be enlarged to people which are not qualified to do security testing. To automatically execute these tests, they have to be defined in a format to be then executed by the software. 
+
+The work in this thesis is about the implementation of the automatic HTTP security testing software and its relative language. Other softwares have been evaluated before deciding to start this work, some of them missed the automation part, others were limited in terms of the possible test to be done. For these reasons a new software and language has been designed and implemented. Also, during the developing, a test definition for a web security protocol, OAuth, has been written in the implemented language.
+
+It will be shown how the testing software and language perform on a specific protocol in a real use-case scenario.
+
+
 
 
