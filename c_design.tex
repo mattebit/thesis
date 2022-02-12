@@ -4,31 +4,37 @@ This chapter introduces how the testing software (from now on tool) and the lang
 One of the objectives was to think of a language that could specify the tests once, and that could make possible to test them over multiple web services. For example, a series of tests to verify the well-known vulnerabilities of a specific protocol could be defined and then used on any type of web service.
 
 \section{Choosing a language standard}
-A standard to follow while writing the tests had to be found, the first option was to define a proper language with it's dedicated parser, this option was discarded, as it was very difficult to implement and other already existing alternatives were available. The one that has been choosen is JSON (JavaScript Object Notation), it allows a gerarchical structure of the tests, using an easy writing syntax. Also, its Object oriented Notation is very useful, as tests and its components will be defined as Objects.
+A standard to follow while writing the tests had to be found, the first option was to define a proper language with it's dedicated parser, this option was discarded, as it was very difficult to implement and other already existing alternatives were available. The one that has been choosen is JSON (JavaScript Object Notation), it allows to specify the gerarchical structure of the tests, using an easy syntax writing. Also, its Object oriented Notation is very useful, as tests and its components will be defined as Objects.
 
 \section{Example: PKCE Downgrade Test}
-I want to introduce the language with an example. Due to its complexity, having a real example before the explanation of all its components could be helpful to understand their use.
-To understand this test, a brief introduction of PKCE has to be done, as said in \cite{pkce_explanation}: the Proof Key for Code Exchange (PKCE, pronounced pixie) extension describes a technique for public clients to mitigate the threat of having the authorization code intercepted. The technique involves the client first creating a secret, and then using that secret again when exchanging the authorization code for an access token. This way if the code is intercepted, it will not be useful, since the token request relies on the initial secret. 
-The PKCE Downgrade test has as objective to test an \Gls{OAuth} vulnerability where removing the parameter "code\_challenge" from the url of an authorization request message will be downgrading the authentication process in a way that PKCE will not be used if the service is vulnerable \cite{pkce_downgrade}. To test this, we have to intercept the authorization request message, remove the "code\_challenge" parameter, and then forward it.
+\label{sec:pkce_downgrade}
+
+I want to introduce the language with an example. Due to its complexity, having a real example before the explanation of all its components could be helpful to understand their function.
+The scenario of this test is based on the presence of the web service hosted in a server (client), the victim, which is using a browser to connect to the client, the Authorization Server (AS) and the tester, that is doing a Man In The Middle attack between the web service and the victim, and between the victim and the AS.
+\begin{wrapfigure}{l}{0.6\textwidth}
+    \includegraphics[width=0.9\linewidth]{pkce_downgrade.png}
+    \caption{PKCE Downgrade}
+    \label{fig:pkce_downgrade}
+\end{wrapfigure}
+To understand this test, a brief introduction of PKCE has to be done, PKCE (Proof Key for Code Exchange) is an extension of the \gls{OAuth} protocol, as said in \cite{pkce_explanation}: PKCE(pronounced pixie) extension describes a technique for public clients to mitigate the threat of having the authorization code intercepted. The technique involves the client first creating a secret, and then using that secret again when exchanging the authorization code for an access token. This way if the code is intercepted, it will not be useful, since the token request relies on the initial secret. 
+The PKCE Downgrade test has as objective to test an \Gls{OAuth} vulnerability where removing the parameter "code\_challenge" from the url of the authorization request message will be downgrading the authentication process in a way that PKCE will not be used by the AS if the AS is vulnerable \cite{pkce_downgrade}. Making possible to the attacker to steal the authorization code from the AS. The message sequence chart of the attack can be seen in \ref{fig:pkce_downgrade}.
+
+To test this, the browser will execute the victim actions, doing a login on the client. The authorization request message has to be intercepted, the "code\_challenge" parameter has to be removed from it, and then the message has to be forwarded. The test is passed if the AS doesn't admit an exchange without PKCE, for instance, it can return an error page, this means that the AS is not vulnerable. Otherwise, if the AS is vulnerable, the exchange would continue without any error pages or messages.
 The complete test can be found in Attachment \ref{chap:PKCE_complete}
-
-
-% The first Operation defined in this test at line 17 is an operation that is used to start the session (and the browser). The automated browser will execute a series of actions defined by the user in a \gls{session track}. The actions in this case will do a complete login in a website that uses OAuth as SSO login option. During the execution of the actions, language's Operations will be executed. At line 21 there is an Operation used to intercept an "authorization request" message, that is defined in an apoosite file where all Message Types are defined. Once an authorization request message is intercepted, the preconditions at line 32 are executed, checking that the parameter we want to test the vulnerability is used. This is done because the parameter "code\_challenge" is not an optional parameter for the OAuth protocol, so, if it is not present, i want the test to result "not applicable" instead of failed or passed.
-% The next part of the example is the Message Operation at line 35, where I tell to remove from the intercepted message's url the "code\_challenge" parameter.
-% The last part of the test is the definition of the result, the result is part of the evaluation of a test, in this case it is set to "incorrect flow s1", this means that I want the test to be considered passed if the execution of the session s1 is incorrect that is, if the execution of the session s1 encounters an error or an unexpected page.
 
 
 \section{Language structure}
 Each object of the language is a JSON Object which can contain different tags based on its type.
+
 \begin{figure}
     \includegraphics[width=\textwidth]{language_structure.png}
     \caption{Language structure}
     \label{fig:language_structure}
 \end{figure}
 
-
 \subsection{Test Suite}
 The Test Suite is the main Object which contains all the other one, it has these tags:
+
 \begin{itemize}
     \item \textbf{name}, the name of the test suite
     \item \textbf{description}, the description of the test suite
@@ -36,7 +42,7 @@ The Test Suite is the main Object which contains all the other one, it has these
 \end{itemize}
 To implement the PKCE test example above, the Test Suite can be defined in this way:
 
-\begin{lstlisting}[language=json, caption=Test Suite definition]
+\begin{lstlisting}[language=json, caption=Test Suite definition, label={lst:test_suite_definition}]
 {
     "test suite": {
         "name": "OAuth active tests",
@@ -50,7 +56,7 @@ To implement the PKCE test example above, the Test Suite can be defined in this 
 }
 \end{lstlisting}
 
-As we can see, the Test Suite Object is a JSON object having the tag "test suite", with name and description, and a tag "tests" which will contain a list of Test Objects.
+As shown in Listing \ref{lst:test_suite_definition}, the Test Suite Object is a JSON object having the tag "test suite", with name and description, and a tag "tests" which will contain a list of Test Objects.
 
 \subsection{Test}
 Following the hierarchical order, the Test object is the one that actually defines a test. As said earlier, a test is contained in a Test Suite, and contains various tags to be defined:
@@ -62,13 +68,12 @@ Following the hierarchical order, the Test object is the one that actually defin
     \item \textbf{result}, (only for actives) it defines the conditions over which the test is considered passed or not
     \item \textbf{operations}, a list of Operation objects which will be executed
 \end{itemize}
-
 A test can be defined either as active or passive depending on the type of actions it has to do on the intercepted messages. If a test doesn't need to manipulate the flow or the content of the messages is considered passive, otherwise it is considered active.
 The list of Operation Objects contained in a Test is executed iteratively one after the other. Only after the actual Operation has finished the execution the next is started.
 
-Following the PKCE example above, we define an active Test for it:
+Following the PKCE example introduced in \ref{sec:pkce_downgrade}, an active Test is defined:
 
-\begin{lstlisting}[language=json, caption=Active test definition]
+\begin{lstlisting}[language=json, caption=Active test definition, label={lst:active_test_definition}]
 {
     "test": {
         "name": "PKCE Downgrade",
@@ -85,9 +90,15 @@ Following the PKCE example above, we define an active Test for it:
 }    
 \end{lstlisting}
 
-We define the test, specifying its type, which is active, as it has to edit a message removing a parameter from the url, we define a session to be used (more on that later in this chapter) and we add a list of Operation to be executed. The result of the test is also specified, this will also be discussed later in this chapter.
+As can be seen in \ref{lst:active_test_definition}, the test is specified, writing its type, which is active, as it has to edit a message removing a parameter from the url. Moreover, a session and a list of Operation to be executed are added. The result of the test is also specified.
 
 \subsection{Operation}
+\begin{wrapfigure}{r}{0.4\textwidth}
+    \includegraphics[width=0.9\linewidth]{language_structure_2.png}
+    \caption{language structure}
+    \label{fig:language_structure_2}
+\end{wrapfigure}
+
 The Operation object is the component that defines what a test actually does. As shown in the language structure image \ref{fig:language_structure}, an operation could be either a \textbf{standard operation} or a \textbf{session config operation}, the latter is used to manage the sessions for the active tests (i.e. start, stop, pause them). Depending on the type of test which an Operation is defined into, the standard Operation becomes active or passive.
 In both cases, an operation has to contain the \textbf{message type} which defines the type of message to be intercepted in that particular operation (more info in the dedicated paragraph).
 \\A \textbf{passive} operation has as objective to verify the presence (or absence) of some text or parameters in the intercepted message, to do this, it should contain one of the following options:
@@ -108,7 +119,7 @@ If the Test where the operations are defined is an \textbf{active} test, also, i
 
 If the action is set to "\textbf{validate}" the operation is still active, but becomes like a passive operation, because its objective is just to verify that some messages meets some requirements. It will contain a regex or a list of checks to be done. The Validate Operation is part of the Oracle, that is the component that decides whether the tests should be considered passed or not, more details on the Oracle section.
 
-In the PKCE example above, we define an Operation Object for an active test. This Operation has to intercept the "authorization request" message from session "s1", it has to check some Preconditions over it and then do some Message Operations. At the end the message is forwarded. More details on preconditions and Message operations in the next sections.
+In the PKCE example above, an Operation Object for an active test is specified. This Operation has to intercept the "authorization request" message from session "s1", it has to check some Preconditions over it and then do some Message Operations. At the end the message is forwarded. More details on preconditions and Message operations in the next sections.
 
 \begin{lstlisting}[language=json, caption=Operation definition]
 {
@@ -146,18 +157,18 @@ Also the actual checks on the parameter value has to be defined: (if none of the
     \item \textbf{not is}, checks that the parameter value is not what is passed to this tag
     \item \textbf{contains}, checks that the parameter value contains what is passed to this tag 
     \item \textbf{not contains}, checks that the parameter value does not contain what is passed to this tag 
-    \item \textbf{is present}, used to explicitly tell to just check the presence of the parameter, it accepts true or false, depending on if we want to check the presence or absence of the parameter.
+    \item \textbf{is present}, used to explicitly tell to just check the presence of the parameter, it accepts true or false, depending on if, respectively, the presence or the absence of the parameter has to be checked.
 \end{itemize}
 
 Note that by how the logic of the language has been thought, to consider a test passed, all the check Objects has to be evaluated to true. For example, if a parameter should not be present in a given message, the check that has to be done is the one that verify that the parameter is \textbf{not} present. This means that the Check objects should not be thought like an "if then else" construct. If the Check is evaluated to false, the test will not pass.
 
 \subsection{Precondition and validate Objects}
-Check Objects in active tests will not work as in passive tests, there is another way of using them: using them in a Precondition, which is basically a list of the Check Objects, or by using the validate option in an Operation Object, which will make possible to use Checks to validate a given message. This difference of Check Objects between active and passive tests has been done to allow the Oracle to work, differentiating between a precondition and a validation. This way we can define Validate Objects to define the oracle, and Precondition Objects to impose some criteria to allow the execution of the test.
+Check Objects in active tests will not work as in passive tests, there is another way of using them: using them in a Precondition, which is basically a list of the Check Objects, or by using the validate option in an Operation Object, which will make possible to use Checks to validate a given message. This difference of Check Objects between active and passive tests has been done to allow the Oracle to work, differentiating between a precondition and a validation. This way Validate Objects can be used to define the oracle, and Precondition Objects can be used to impose the criteria to allow the execution of the test.
 \paragraph{Precondition}
-Preconditions are used in an operation of an active test to check something in the intercepted message before the execution of the message operations. If the Check objects in the precondition are evaluated to false, the test is considered unsupported, not failed. More precisely the preconditions will be a list of Check Objects. This can be useful in case that it is not known if a given test is "compatible" with a given web service. For example if the service doesn't use some type of protocol, we can assure this by the use of preconditions, checking for the presence of common parameters of the protocol. Preconditions can be also regex.
+Preconditions are used in an operation of an active test to check something in the intercepted message before the execution of the message operations. If the Check objects in the precondition are evaluated to false, the test is considered unsupported, not failed. More precisely the preconditions will be a list of Check Objects. This can be useful in case that it is not known if a given test is "compatible" with a given web service. For example if the service doesn't use some type of protocol, this can be assured this by the use of preconditions, checking for the presence of common parameters of the protocol. Preconditions can be also regex.
 \paragraph{Validate}
-In an Operation Object the only way to use Check objects is by setting the "action" tag to "validate", this will transform the Operation in a Validate Operation. This Validate Operation will be used by the Oracle to decide whether the test should be considered passed or not. Validate Operation has to be used when we want to check that something in a message is how we expect, if it is not, the result of the test will be considered failed.
-We can use the Validate Operation with a list of checks or a regex (exactly like in passive tests).
+In an Operation Object the only way to use Check objects is by setting the "action" tag to "validate", this will transform the Operation in a Validate Operation. This Validate Operation will be used by the Oracle to decide whether the test should be considered passed or not. Validate Operation has to be used when a specific part of a message should be in a specific way, if it is not, the result of the test will be considered failed.
+In order to do this the Validate Operation with a list of checks or a regex (exactly like in passive tests) can be used.
 
 \subsection{Save}
 A message or a string can be saved by the use of the tag \textbf{save}, this can be used both in an Operation, to save an entire message, or in a Message Operation to save the value of a found parameter. So a variable can be a message-type variable, containing an entire saved message, or it can be a string-type, containing a string.
@@ -196,7 +207,7 @@ All the previous tags accept a regex, and whatever that regex matches will be ed
 
 \paragraph{Type xml}
 Another possibility is to interpret the decoded text as xml, to do this, the type tag has to be set to "xml".
-This way we have various possible operations to be done on the decoded xml:
+This way the various possible operations to be done on the decoded xml are:
 \begin{itemize}
     \item \textbf{remove tag}, removes the specified tag
     \item \textbf{remove attribute}, removes the specified attribute associated with the xml tag specified using the \textbf{xml tag}
@@ -208,7 +219,7 @@ This way we have various possible operations to be done on the decoded xml:
     \item \textbf{save attribute}, saves the specified attribute value associated with the xml tag specified using the \textbf{xml tag}
 \end{itemize}
 
-In the PKCE example above, we have just a simple Message Operation which has to remove the parameter "code\_challenge" from the url of the message, so the resulting Message Operation will be:
+In the PKCE example above, a simple Message Operation is present, which has to remove the parameter "code\_challenge" from the url of the message, so the resulting Message Operation will be:
 \begin{lstlisting}[language=json, caption=Message Operation definition]
 {
     "from": "url",
@@ -238,7 +249,7 @@ A message type object is defined using these tags:
 \begin{itemize}
     \item \textbf{name}, the name that will be used in the language to refer to this message type
     \item \textbf{is request}, if set to true if the searched message is a request, false otherwise
-    \item \textbf{response name}, in the case that the searched message is a request message, we can use this tag to associate a name to the response of that message. This is useful when we can identify the request message but not the response message.
+    \item \textbf{response name}, if the searched message is a request message, this tag can be used to associate a name to the response of that message. This is useful when only the request message can be identified, making possible to intercept the correlated response message.
     \item \textbf{checks}, a list of Check objects used to identify the message. If evaluated to true, the message is considered found
 \end{itemize}
 
@@ -297,7 +308,7 @@ To build the oracle for the PKCE example above, both the result of the test and 
     }
 ],
 \end{lstlisting}
-With this precondition, we want the test to be considered "not applicable" if the parameter code\_challenge is not found in the authorization request message. This means that is not possible to execute the given test over the actual intercepted message if the preconditions are not satisfied.
+This precondition is used to consider the test "not applicable" if the parameter code\_challenge is not found in the authorization request message. This means that is not possible to execute the given test over the actual intercepted message if the preconditions are not satisfied.
 
 The \textbf{result} tag of the Test in the PKCE example is set to:
 \begin{lstlisting}[language=json]

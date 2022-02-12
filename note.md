@@ -13,3 +13,9 @@
 
 talk about this thing
 Note for the definition of the track: to have a successfull oracle i suggest to define a track that not only does the login of the user, but also performs some actions on the final page, this way the result of the track is more complete. (i.e. if we just tell to login, the track will not try to act on the logged page, this way the plugin has no clue on if the final page contains an error or not)
+
+
+Immagine PKCE downgrade test
+https://danielfett.de/2020/05/16/pkce-vs-nonce-equivalent-or-not/
+
+https://danielfett.de/img/plantuml/b936c9ccd8c1ca76156cef40d4262ba1fa929fc43214cf2549d44176ba5b458b.svg
