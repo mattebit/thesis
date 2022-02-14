@@ -1,10 +1,10 @@
 \chapter{Design of testing language}
 \label{chap:Design}
-This chapter introduces how the testing software (from now on tool) and the language introduced in \ref{chap:introduction} have been designed. The testing language specify what a test does, a test is a series of verifications or modifications of one or more HTTP messages (from now on messages) exchanged by the client and the service using the browser-based HTTP protocol. At the end of a test, a check of the expected conditions has be done, and the result has to be given, to tell if the test has been successfully passed or not. The language will be defined on the basis of all the possible actions which a security tester would do on the messages. 
+This chapter introduces how the testing software (from now on tool) and the language introduced in \ref{chap:introduction} have been designed. The testing language specify what a test does, a test is a series of verifications or modifications done on one or more HTTP messages (from now on messages) exchanged by the client and the service using the browser-based HTTP protocol. After the execution of a test, a check of the expected conditions has to be done, and the result has to be given, to tell if the test has been successfully passed or not. The language will be defined on the basis of all the possible actions which a security tester would need to do on the messages. 
 One of the objectives was to think of a language that could specify the tests once, and that could make possible to test them over multiple web services. For example, a series of tests to verify the well-known vulnerabilities of a specific protocol could be defined and then used on any type of web service.
 
 \section{Choosing a language standard}
-A standard to follow while writing the tests had to be found, the first option was to define a proper language with it's dedicated parser, this option was discarded, as it was very difficult to implement and other already existing alternatives were available. The one that has been choosen is JSON (JavaScript Object Notation), it allows to specify the gerarchical structure of the tests, using an easy syntax writing. Also, its Object oriented Notation is very useful, as tests and its components will be defined as Objects.
+A standard to follow while writing the tests had to be found, the first option was to define a proper language with its dedicated parser, this option was discarded, as it was very difficult to implement and other already existing alternatives were available. The one that has been choosen is JSON (JavaScript Object Notation), it allows to specify the gerarchical structure of the tests, using an easy syntax writing. Also, its Object oriented Notation is very useful, as tests and its components will be defined as Objects.
 
 \section{Example: PKCE Downgrade Test}
 \label{sec:pkce_downgrade}
@@ -19,12 +19,11 @@ The scenario of this test is based on the presence of the web service hosted in 
 To understand this test, a brief introduction of PKCE has to be done, PKCE (Proof Key for Code Exchange) is an extension of the \gls{OAuth} protocol, as said in \cite{pkce_explanation}: PKCE(pronounced pixie) extension describes a technique for public clients to mitigate the threat of having the authorization code intercepted. The technique involves the client first creating a secret, and then using that secret again when exchanging the authorization code for an access token. This way if the code is intercepted, it will not be useful, since the token request relies on the initial secret. 
 The PKCE Downgrade test has as objective to test an \Gls{OAuth} vulnerability where removing the parameter "code\_challenge" from the url of the authorization request message will be downgrading the authentication process in a way that PKCE will not be used by the AS if the AS is vulnerable \cite{pkce_downgrade}. Making possible to the attacker to steal the authorization code from the AS. The message sequence chart of the attack can be seen in \ref{fig:pkce_downgrade}.
 
-To test this, the browser will execute the victim actions, doing a login on the client. The authorization request message has to be intercepted, the "code\_challenge" parameter has to be removed from it, and then the message has to be forwarded. The test is passed if the AS doesn't admit an exchange without PKCE, for instance, it can return an error page, this means that the AS is not vulnerable. Otherwise, if the AS is vulnerable, the exchange would continue without any error pages or messages.
+To test this, the browser will execute the victim actions, doing a login on the client. The authorization request message has to be intercepted, the "code\_challenge" parameter has to be removed from it, and then the message has to be forwarded. The test is passed if the AS does not admit an exchange without PKCE, for instance, it can return an error page, this means that the AS is not vulnerable. Otherwise, if the AS is vulnerable, the exchange would continue without any error pages or messages.
 The complete test can be found in Attachment \ref{chap:PKCE_complete}
 
-
 \section{Language structure}
-Each object of the language is a JSON Object which can contain different tags based on its type.
+Each part of the language is an Object, which is then written as a JSON Object in the language, that contains a series of name/value couples. The hierarchical structure of the language can be seen in Figure \ref{fig:language_structure}. An example of a Test Suite Object containing other Objects can be seen in Figure \ref{fig:language_structure_2}. In this section all the Objects composing the language will be discussed.
 
 \begin{figure}
     \includegraphics[width=\textwidth]{language_structure.png}
@@ -68,8 +67,8 @@ Following the hierarchical order, the Test object is the one that actually defin
     \item \textbf{result}, (only for actives) it defines the conditions over which the test is considered passed or not
     \item \textbf{operations}, a list of Operation objects which will be executed
 \end{itemize}
-A test can be defined either as active or passive depending on the type of actions it has to do on the intercepted messages. If a test doesn't need to manipulate the flow or the content of the messages is considered passive, otherwise it is considered active.
-The list of Operation Objects contained in a Test is executed iteratively one after the other. Only after the actual Operation has finished the execution the next is started.
+A test can be defined either as active or passive depending on the type of actions it has to do on the intercepted messages. If a test does not need to manipulate the flow or the content of the messages is considered passive, otherwise it is considered active.
+The list of Operation Objects contained in a Test is executed iteratively one after the other, so, only after an Operation is completed, the next one starts.
 
 Following the PKCE example introduced in \ref{sec:pkce_downgrade}, an active Test is defined:
 
@@ -99,17 +98,17 @@ As can be seen in \ref{lst:active_test_definition}, the test is specified, writi
     \label{fig:language_structure_2}
 \end{wrapfigure}
 
-The Operation object is the component that defines what a test actually does. As shown in the language structure image \ref{fig:language_structure}, an operation could be either a \textbf{standard operation} or a \textbf{session config operation}, the latter is used to manage the sessions for the active tests (i.e. start, stop, pause them). Depending on the type of test which an Operation is defined into, the standard Operation becomes active or passive.
+The Operation Object defines the actions that a test has to do. As shown in the language structure in Figure \ref{fig:language_structure}, an operation could be either a \textbf{standard operation} or a \textbf{session config operation}, the latter is used to manage the sessions for the active tests (i.e. start, stop, pause them). Depending on the type of test which an Operation is defined into, the standard Operation becomes active or passive.
 In both cases, an operation has to contain the \textbf{message type} which defines the type of message to be intercepted in that particular operation (more info in the dedicated paragraph).
 \\A \textbf{passive} operation has as objective to verify the presence (or absence) of some text or parameters in the intercepted message, to do this, it should contain one of the following options:
 \begin{itemize}
-    \item A \textbf{list of Check objects}, which are then executed to check the presence (or absence) of some text or parameter
-    \item A \textbf{regex} inspection, which executes an inspection considering the intercepted message as plain text and executing a regex over it, if the regex has a match, the operation is considered passed, otherwise failed. Note that when a regex is used, it has to be specified also the \textbf{message section} over which to execute it (boy, head, url)
+    \item A list of \textbf{Check} Objects, which are then executed to check the presence (or absence) of some text or parameter
+    \item A \textbf{regex} inspection, which executes an inspection considering the intercepted message as plain text and executing a regex over it, if the regex has a match, the operation is considered passed, otherwise failed. Note that when a regex is used, it has to be specified also the \textbf{message section} over which to execute it (body, head, url)
 \end{itemize}
 
-If the Test where the operations are defined is an \textbf{active} test, also, if the intercepted messages need to be manipulated in some way, an active Operation has to be defined. It is composed by:
+If the Test Object where the operations are defined is an \textbf{active} test, also, if the intercepted messages need to be manipulated, an active Operation has to be defined. It is composed by:
 \begin{itemize}
-    \item \textbf{action}, the action it has to do (intercept, validate)
+    \item \textbf{action}, the action it has to do (\textit{intercept}, \textit{validate})
     \item \textbf{from session}, from which session to expect the message to be intercepted
     \item \textbf{then}, the action to do after the receiving and manipulation of the message (forward or drop)
     \item \textbf{replace request (or response)}, specify a previously saved message in order to replace it to the intercepted one
@@ -117,9 +116,9 @@ If the Test where the operations are defined is an \textbf{active} test, also, i
     \item \textbf{message operations}, a list of Message Operation objects, which will do the actual manipulation of the intercepted message
 \end{itemize}
 
-If the action is set to "\textbf{validate}" the operation is still active, but becomes like a passive operation, because its objective is just to verify that some messages meets some requirements. It will contain a regex or a list of checks to be done. The Validate Operation is part of the Oracle, that is the component that decides whether the tests should be considered passed or not, more details on the Oracle section.
+If the action is set to \textit{validate} the operation is still active, but becomes like a passive operation, because its objective is just to verify that some messages meets some requirements. It will contain a regex or a list of checks to be done. The Validate Operation Object is part of the oracle, that is the component that decides whether the tests should be considered passed or not, more details will be discussed in the apposite section.
 
-In the PKCE example above, an Operation Object for an active test is specified. This Operation has to intercept the "authorization request" message from session "s1", it has to check some Preconditions over it and then do some Message Operations. At the end the message is forwarded. More details on preconditions and Message operations in the next sections.
+In the PKCE example seen in \ref{sec:pkce_downgrade}, an Operation Object for an active test is specified. This Operation has to intercept the \textit{authorization request} message from session "s1", it has to check some Preconditions over it and then do some Message Operations. At the end the message is forwarded to its original destination.
 
 \begin{lstlisting}[language=json, caption=Operation definition]
 {
@@ -137,18 +136,19 @@ In the PKCE example above, an Operation Object for an active test is specified. 
 \end{lstlisting}
 
 \subsection{Message section}
-The message section specifies in what part of the message execute the given action. The possible message sections are:
+The message section specifies in what part of the message execute the given action.
+According to \cite{http} the parts that compose an HTTP message are:
 \begin{itemize}
-    \item \textbf{url}, only for request messages, is the message without the head and body parts
-    \item \textbf{head}, it is the message without url and body parts
-    \item \textbf{body}, it is the message without url and head parts
+    \item \textbf{url}, a start line describing the message
+    \item \textbf{head}, a block of headers containing attributes
+    \item \textbf{body}, an optional body containing data
 \end{itemize}
 
 \subsection{Check Object}
-The Check Object is used in Operations and in other Objects to verify that, in a message, some circumstances are satisfied. For example, it can be used to check that a specific parameter in the url of a message should be equal to a specific string.
+The Check Object is used in Operations Objects and in other Objects to verify that, in a message, some circumstances are satisfied. For instance, it can be used to check that a specific parameter in the url of a message should be equal to a specific string.
 The Check Object is defined by:
 \begin{itemize}
-    \item \textbf{in}, where to search the given parameter (head, body or url)
+    \item \textbf{in}, where to search the given parameter. The possible value is \textit{head}, \textit{body} or \textit{url}
     \item \textbf{check param}, specifies the parameter name to be searched
 \end{itemize}
 Also the actual checks on the parameter value has to be defined: (if none of these are defined, the Check will only check if the given parameter is present or not in the given section)
@@ -160,14 +160,14 @@ Also the actual checks on the parameter value has to be defined: (if none of the
     \item \textbf{is present}, used to explicitly tell to just check the presence of the parameter, it accepts true or false, depending on if, respectively, the presence or the absence of the parameter has to be checked.
 \end{itemize}
 
-Note that by how the logic of the language has been thought, to consider a test passed, all the check Objects has to be evaluated to true. For example, if a parameter should not be present in a given message, the check that has to be done is the one that verify that the parameter is \textbf{not} present. This means that the Check objects should not be thought like an "if then else" construct. If the Check is evaluated to false, the test will not pass.
+Note that by how the logic of the language has been thought, to consider a test passed, all the check Objects has to be evaluated to true. For instance, if a parameter should not be present in a given message, the check has to verify that the parameter is \textbf{not} present. If a Check is evaluated to false, the test will fail.
 
-\subsection{Precondition and validate Objects}
+\subsection{Precondition and Validate Objects}
 Check Objects in active tests will not work as in passive tests, there is another way of using them: using them in a Precondition, which is basically a list of the Check Objects, or by using the validate option in an Operation Object, which will make possible to use Checks to validate a given message. This difference of Check Objects between active and passive tests has been done to allow the Oracle to work, differentiating between a precondition and a validation. This way Validate Objects can be used to define the oracle, and Precondition Objects can be used to impose the criteria to allow the execution of the test.
-\paragraph{Precondition}
-Preconditions are used in an operation of an active test to check something in the intercepted message before the execution of the message operations. If the Check objects in the precondition are evaluated to false, the test is considered unsupported, not failed. More precisely the preconditions will be a list of Check Objects. This can be useful in case that it is not known if a given test is "compatible" with a given web service. For example if the service doesn't use some type of protocol, this can be assured this by the use of preconditions, checking for the presence of common parameters of the protocol. Preconditions can be also regex.
-\paragraph{Validate}
-In an Operation Object the only way to use Check objects is by setting the "action" tag to "validate", this will transform the Operation in a Validate Operation. This Validate Operation will be used by the Oracle to decide whether the test should be considered passed or not. Validate Operation has to be used when a specific part of a message should be in a specific way, if it is not, the result of the test will be considered failed.
+\paragraph{Precondition Object}
+Preconditions are used in an Operation of an active test to check that the intercepted message is complaint to specific criteria fixed by the tester, before the execution of the Message Operations. If the Check objects in the precondition are evaluated to false, the test is considered unsupported, not failed. More precisely the preconditions will be a list of Check Objects. This can be useful in case that it is not known if a given test is "compatible" with a given web service. For example if the service does not use some type of protocol, this can be assured this by the use of preconditions, checking for the presence of common parameters of the protocol. Preconditions can be also regex.
+\paragraph{Validate Object}
+In an Operation Object the only way to use Check objects is by setting the "action" tag to "validate", this will transform the Operation in a Validate Operation. This Validate Operation will be used by the Oracle to decide whether the test should be considered passed or not. Validate Operation has to be used when a given part of a message should be in a specific way, if it is not, the result of the test will be considered failed.
 In order to do this the Validate Operation with a list of checks or a regex (exactly like in passive tests) can be used.
 
 \subsection{Save}
@@ -175,7 +175,7 @@ A message or a string can be saved by the use of the tag \textbf{save}, this can
 There are two ways of using the value of a variable which depends on its type:
 \begin{itemize}
     \item Using a \textbf{message-type} variable: it can be used in an Operation with the tag \textbf{action} set to intercept. There is the possibility of using \textbf{replace request} (or \textbf{replace response}) tag giving the name of the variable. This will replace the intercepted message's request (or response) with the message saved in the variable.
-    \item Using a \textbf{string-type} variable: can be used in Message Operations, where a parameter has to be edited, writing \textbf{use} tag specifying the name of the variable to use. This will use the value in that variable in the way specified by the other tags (i.e. tags "edit" or "add")
+    \item Using a \textbf{string-type} variable: can be used in Message Operations, where a parameter has to be edited, writing \textbf{use} tag specifying the name of the variable to use. This will use the value in that variable in the way specified by the other tags (i.e. tags \textbf{edit} or \textbf{add})
 \end{itemize}
 
 \subsection{Message Operation}
@@ -203,7 +203,7 @@ Associated to this interpretation, it is possible to use a list of actions over 
     \item txt add: after the matched string adds a string specified with the \textbf{value} tag
     \item txt save: saves the matched string in a variable with name specified in the \textbf{as} tag
 \end{itemize}
-All the previous tags accept a regex, and whatever that regex matches will be edited or added or saved based on the specified tag.
+All the previous tags accept a regex, and anything that regex matches, will be edited or added or saved based on the specified tag.
 
 \paragraph{Type xml}
 Another possibility is to interpret the decoded text as xml, to do this, the type tag has to be set to "xml".
@@ -219,7 +219,7 @@ This way the various possible operations to be done on the decoded xml are:
     \item \textbf{save attribute}, saves the specified attribute value associated with the xml tag specified using the \textbf{xml tag}
 \end{itemize}
 
-In the PKCE example above, a simple Message Operation is present, which has to remove the parameter "code\_challenge" from the url of the message, so the resulting Message Operation will be:
+In the PKCE example found in \ref{sec:pkce_downgrade}, a simple Message Operation is present, which has to remove the parameter "code\_challenge" from the url of the message, so the resulting Message Operation will be:
 \begin{lstlisting}[language=json, caption=Message Operation definition]
 {
     "from": "url",
@@ -228,7 +228,7 @@ In the PKCE example above, a simple Message Operation is present, which has to r
 \end{lstlisting}
 
 \paragraph{Note for body section in message operations}
-If the 'body' section is chosen, the meaning of the following tags becomes different:
+If the \textit{body} section is chosen, the meaning of the following tags becomes different:
 \begin{itemize}
     \item \textbf{remove parameter} will work like \textbf{remove match word}, in a way that the value of the tag is treated as a regex which will be matching against the entire body section, having all the matches removed from it
     \item \textbf{edit} is treated as a regex, substituting everything that matches that regex with the text specified by the \textbf{in} tag
@@ -236,16 +236,14 @@ If the 'body' section is chosen, the meaning of the following tags becomes diffe
     \item \textbf{add} is associated with a regex, it will add at the end of the matched text the value specified by \textbf{this} tag
 \end{itemize}
 
-This changes also for the \textbf{decode parameter} tag, in a way that if the message section is 'body' the \textbf{decode param} will accept a regex, and everything matched by that regex will be considered to be decoded. An example of a regex to match a parameter in the body could be 
-"\verb|(?<=SAMLResponse=)[^$\n& ]*|"
-that will search for the text "SAMLResponse", taking everything after the "=" until end of line or "\&" or whitespace is found
+This changes also for the \textbf{decode parameter} tag, in a way that if the message section is 'body' the \textbf{decode param} will accept a regex, and everything matched by that regex will be considered to be decoded. \\ An example of a regex to match a parameter in the body could be "\verb|(?<=parameter_name=)[^$\n& ]*|" that will search for the text "parameter\_name", taking everything after the "=" until end of line or "\&" or whitespace is found.
 
-This difference of the tag meaning is due to the difficulty of identifying parameters in the body section in contrast to the head section. In fact, while the head section is based on the HTTP standard, having all parameters defined in a clear and well-defined way like "Name: content" the body section could contain any type of content. To manage this variety of contents the decision of using regex instead parameter names for the body section has been chosen.
+This difference of the tag meaning is due to the difficulty of identifying parameters in the body section in contrast to the head section. In fact, while the head section is based on the HTTP standard, having all parameters defined in a clear and well-defined way like "Name: value" the body section could contain any type of content. To manage this variety of contents the decision of using regex instead parameter names for the body section has been chosen.
 
-\subsection{Message type definition}
+\subsection{Message Type definition}
 The message type definition is needed in order to define some types of message that will be later used in the language to intercept them.
-The message type definition is not actually part of the language, but it is stored in a file in the \Gls{burp} folder. Anyway, the definition of the type of messages uses the same Objects as the language.
-A message type object is defined using these tags:
+The message type definition is not actually part of the language, but it is stored in a file in the \Gls{burp} folder. The definition of the type of messages uses the same Objects as the language.
+A Message Type Object is defined using these tags:
 \begin{itemize}
     \item \textbf{name}, the name that will be used in the language to refer to this message type
     \item \textbf{is request}, if set to true if the searched message is a request, false otherwise
@@ -253,38 +251,28 @@ A message type object is defined using these tags:
     \item \textbf{checks}, a list of Check objects used to identify the message. If evaluated to true, the message is considered found
 \end{itemize}
 
-This is an example that defines the \Gls{SAML} request and the \Gls{SAML} response messages
-\begin{lstlisting}[language=json, caption=Message Types definition]
+Following the example from \ref{sec:pkce_downgrade} the definition of the \textit{authorization request} message used in the test, and can be found in the Listing \ref{lst:msg_def}.
+
+\begin{lstlisting}[language=json, caption=Message Types definition, label={lst:msg_def}]
 {
     "message_types": [
         {
-            "name": "saml request",
+            "name": "authorization request",
             "is request": true,
+            "response name": "authorization response",
             "checks": [
                 {
                     "in": "url",
-                    "check param": "SAMLRequest",
-                    "is present": true
+                    "check param": "response_type",
+                    "is present": "true"
                 }
             ]
         },
-        {
-            "name": "saml response",
-            "is request": true,
-            "checks": [
-                {
-                    "in": "body",
-                    "check param": "SAMLResponse",
-                    "is present": true
-                }
-            ]
-        }
     ]
 }
 \end{lstlisting}
-The \Gls{SAML} request message has in its url the parameter "SAMLRequest", the \Gls{SAML} response message instead, has the "SAMLResponse" parameter in the body. Then, if a \Gls{SAML} request has to be intercepted in a test, it has to be defined in the message types, and then used in the Operation.
-As a result, if "saml request" is used in an Operation, the message having the parameter "SAMLRequest" in his url will be intercepted and processed by the Operation.
 
+When used, this message type will search for the parameter \textit{response\_type} in the url of every request message. When a match is found, the Operation in which the message\_type is used will be executed.
 
 \section{The oracle}
 The ensemble of all parts of the language that decide the result of the tests is called Oracle,
@@ -298,8 +286,8 @@ The oracle is based on three main components:
 If all the above conditions are met, the test is considered passed, otherwise it is considered failed (or not applicable).
 The oracle can be built for example by using Validate objects to verify that some intercepted messages satisfy some conditions like having a particular parameter or string in them.
 
-To build the oracle for the PKCE example above, both the result of the test and the precondition has been used:
-\begin{lstlisting}[language=json, caption=Precondition definition]
+To build the oracle for the PKCE example mentioned in \ref{sec:pkce_downgrade}, both the result of the test and the precondition has been used, specifically, the precondition part is shown in Listing \ref{lst:precondtion}
+\begin{lstlisting}[language=json, caption=Precondition definition, label={lst:precondtion}]
 "preconditions": [
     {
         "in": "url",
@@ -310,11 +298,11 @@ To build the oracle for the PKCE example above, both the result of the test and 
 \end{lstlisting}
 This precondition is used to consider the test "not applicable" if the parameter code\_challenge is not found in the authorization request message. This means that is not possible to execute the given test over the actual intercepted message if the preconditions are not satisfied.
 
-The \textbf{result} tag of the Test in the PKCE example is set to:
+The \textbf{result} tag of the Test in the PKCE example in \ref{sec:pkce_downgrade} is set to:
 \begin{lstlisting}[language=json]
 "result": "incorrect flow s1"
 \end{lstlisting}
-this means that the oracle will evaluate the test as passed if and only if the execution of the \gls{session track} of the session "s1" will be incorrect, this means that if the browser will encounter some type of page which was not meant to encounter, the test will be considered passed. With "was not meant to encounter" I mean that the actions in the \gls{session track} cannot be accomplished, because the objects that should be pressed in the page are not present, this happens for example if an error page is displayed, which can tells us the service is not vulnerable to the Test, so the test is passed.
+This means that the oracle will evaluate the test passed if and only if the execution of the \gls{session track} of the session "s1" will be incorrect, this means that if the browser will encounter some type of page which was not meant to encounter, the test will be considered passed. With "was not meant to encounter" I mean that the actions in the \gls{session track} cannot be accomplished, because the objects that should be pressed in the page are not present, this happens for example if an error page is displayed, which can tells us the service is not vulnerable to the Test, so the test is passed.
 
 \section{Sessions}
 A session is a browser executing a \gls{session track}, a \gls{session track} is a list of user actions that the browser will simulate automatically during execution of the Tests. There is the possibility of defining and using more than one session, in a way that (i.e.) reply tests can be executed. Different sessions can have different session tracks.

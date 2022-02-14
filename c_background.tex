@@ -20,7 +20,7 @@ This regex will search for the string "Host:" followed by 0 or 1 whitespace, and
 \end{itemize}
 
 \section{IdM protocols: SAML and OAuth}
-The so-called IdM protocols are protocols that deals with identity management. For the aim of this thesis, \gls{SAML} (Security Assertion Markup Language) and \Gls{OAuth} 2.0 (from now on \Gls{OAuth}) will be discussed, as they are used in the examples and in related works.
+Identity Management (IdM) protocols are protocols that deals with identity management. For the aim of this thesis, \gls{SAML} (Security Assertion Markup Language) and \Gls{OAuth} 2.0 (from now on \Gls{OAuth}) will be discussed, as they are used in the examples and in related works.
 
 Both \Gls{SAML} and \Gls{OAuth} are Single Sign-On (SSO) protocols, they follow an authentication scheme that allows a user to log in with a single ID and password to any of several related, yet independent, software systems, a more complete explanation can be found in \cite{claudio_grisenti}. 
 The difference between \Gls{SAML} and \Gls{OAuth} is how they work, but their objective is the same: to certificate the identity of a given person in different circumstances.
@@ -30,6 +30,8 @@ As stated in \cite{ietf_oauth2}, the \Gls{OAuth} authorization framework enables
 A series of messages has to be exchanged between the two parties in order to authenticate a resource owner that wants to access some reserved data in a service.
 
 % todo: authorization request message
+% todo: code challenge
+% todo: PKCE
 
 \subsection{SAML - Security Assertion Markup Language}
 As stated in \cite{ietf_SAML}, "The Security Assertion Markup Language (\Gls{SAML}) 2.0 is an XML-based framework that allows identity and security information to be shared across security domains. The Assertion, an XML security token, is a fundamental construct of \Gls{SAML} that is often adopted for use in other protocols and specifications. An Assertion is generally issued by an Identity Provider and consumed by a Service Provider that relies on its content to identify the Assertion's subject for security-related purposes."
