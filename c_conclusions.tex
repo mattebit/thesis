@@ -1,29 +1,9 @@
-\chapter{Conclusions, Limitations and Future Works}
+\chapter{Conclusions and Future Works}
 \label{chap:Conclusions}
-In this chapter, the conclusion and limitations of the work of this thesis will be discussed.
-
-\section{Problems and limitations encountered}
-During the implementation and the testing of the tool multiple problems have been encountered, the majority of them have been solved, but some are still present. The most relevant ones will be discussed next:
-
-\subsection{Automation problems}
-One of the biggest limitations that the tool has, is the session track actions automations, it often happens that some captcha is encountered during execution, making impossible to proceed. Moreover, the track execution is limited, there is only a possible flow of actions (the one defined) and there is not the possibility of inserting if then else constructs that could help to differentiate the actions based on the actual page or popup. For example, it could happen that a "limited time offer" popup could appear in a website only in a particular time, the execution of the session track could be compromised by that, making impossible to distinguish whether the test failed because of the tested vulnerability or the actual popup.
-Another problem in the automation part of the tool is that is sometimes limited, because the session track has to been defined over a specific website, doing a set of action that is directly correlated to the website. Whenever the website is changed somehow, for example the IDs or the position of some button to be clicked change, the execution will fail, because the track could not continue.
-This is still not resolved, as no methods to make the track more dynamic has been found yet. This also means that every different web service which has to be tested will need a different session track to be defined. Making it a bit time-consuming to do. 
-
-\subsection{Oracle is sometimes ambiguous}
-There still is a problem with the Oracle, where sometimes false positives or negatives arise if the execution of the tool is interrupted for any reason. This is a problem because the interruption of the execution is a term of valuation for the Oracle, this means that the oracle will give a result also based on the correctness or incorrectness of the execution of the \gls{session track}. This makes impossible to distinguish if the \gls{session track} has failed because on an error on the definition on it, or because of an expected reason (like after a message modification).
-
-\subsection{Interface and user feedbacks}
-The interface of the tool is a bit raw, it is not very user-friendly, the user experience could be improved. During my work I did not focus my attention to these topics, but they are very important as the tool is not so easy to use. Also, the feedbacks of the errors encountered by the tool such as execution errors or others are not all shown to the user, this surely has to be fixed, making more clear to the end user what is going wrong.
-
-\subsection{Message filtering could be improved}
-The message filtering part of the language could be extended by the use of an AI, making it possible to define a more abstract filter that does not solely rely on the search of parameters or exact strings.
-
-\section{Conclusions}
 The objectives fixed at the start of this thesis can be considered reached, the new tool and language is fully working as can be seen in \cite{sofia_zanrosso}, still, it is not perfect in terms of stability and affidability, as a deep testing phase should be accomplished, but overall, the tool is functioning well.
 
-\section{Future works}
-First of all, the problems and the limitations should be solved. Then, the concept of a test definition language could be extended even for other uses, like for low-level networking protocols such as routing protocols, electronic trading protocols, IP protocols, and so on. Making it possible to search for known vulnerabilities in real-time or just by analyzing saved packets files. For example, a plugin for Wireshark software could be built.
+As future works, the problems and the limitations seen in \ref{sec:limitations} should be solved. Then, the concept of a test definition language could be extended even for other uses, like for low-level networking protocols such as routing protocols, electronic trading protocols, IP protocols, and so on. Making it possible to search for known vulnerabilities in real-time or just by analyzing saved packets files. For example, a plugin for Wireshark software could be developed.
+% Save the messages in a .cap file instead of a txt
 
 
 

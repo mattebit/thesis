@@ -92,6 +92,7 @@ Following the PKCE example introduced in \ref{sec:pkce_downgrade}, an active Tes
 As can be seen in \ref{lst:active_test_definition}, the test is specified, writing its type, which is active, as it has to edit a message removing a parameter from the url. Moreover, a session and a list of Operation to be executed are added. The result of the test is also specified.
 
 \subsection{Operation}
+\label{sec:operation}
 \begin{wrapfigure}{r}{0.4\textwidth}
     \includegraphics[width=0.9\linewidth]{language_structure_2.png}
     \caption{language structure}
@@ -272,7 +273,7 @@ Following the example from \ref{sec:pkce_downgrade} the definition of the \texti
 }
 \end{lstlisting}
 
-When used, this message type will search for the parameter \textit{response\_type} in the url of every request message. When a match is found, the Operation in which the message\_type is used will be executed.
+When used, this message type will search for the parameter \textit{response\_type} in the url of every request message. When a match is found, the Operation in which this message\_type is used will be executed.
 
 \section{The oracle}
 The ensemble of all parts of the language that decide the result of the tests is called Oracle,
@@ -302,13 +303,13 @@ The \textbf{result} tag of the Test in the PKCE example in \ref{sec:pkce_downgra
 \begin{lstlisting}[language=json]
 "result": "incorrect flow s1"
 \end{lstlisting}
-This means that the oracle will evaluate the test passed if and only if the execution of the \gls{session track} of the session "s1" will be incorrect, this means that if the browser will encounter some type of page which was not meant to encounter, the test will be considered passed. With "was not meant to encounter" I mean that the actions in the \gls{session track} cannot be accomplished, because the objects that should be pressed in the page are not present, this happens for example if an error page is displayed, which can tells us the service is not vulnerable to the Test, so the test is passed.
+This means that the oracle will consider the test passed, if and only if the execution of the \gls{session track} of the session named "s1" will be incorrect. The execution is considered incorrect when the execution of the \gls{session track} fails, this can be for instance, because of an unexpected page is displayed, or an element that should be clicked is not present in the page. In the case of the PKCE example \ref{sec:pkce_downgrade} the test is passed if the removal of the parameter "code\_challenge" is not admited by the AS, usually, if this is the case, an error page will be displayed.
 
 \section{Sessions}
-A session is a browser executing a \gls{session track}, a \gls{session track} is a list of user actions that the browser will simulate automatically during execution of the Tests. There is the possibility of defining and using more than one session, in a way that (i.e.) reply tests can be executed. Different sessions can have different session tracks.
+A session is a browser executing a \gls{session track}, a \gls{session track} is a list of user actions that the browser will simulate automatically during execution of the Tests. There is the possibility of defining and using more than one session, in a way that e.g., reply tests can be executed. Different sessions can have different session tracks.
 
-As said in the previous sections, a \textbf{from session} tag can be specified in the Operation, this will tell in which of the available session search the desired message. To define the \gls{session track} the idea used in \cite{giulio_pellizzari,claudio_grisenti,stefano_facchini}, has been used, adding some options like "wait" and "clear cookies" functionalities.
-The syntax of the \gls{session track} is based on the plain text export of Katalon Recorder\cite{katalon_recorder_syntax}.
+As said in \ref{sec:operation}, a \textbf{from session} tag can be specified in the Operation, this will specify in which session to search the message. To define the \gls{session track} the idea used in \cite{giulio_pellizzari,claudio_grisenti,stefano_facchini}, has been used, adding some options like \textbf{wait} and \textbf{clear cookies} functionalities.
+The syntax of the \gls{session track} is based on the plain text export of Katalon Recorder \cite{katalon_recorder_syntax}. 
 An example of a \gls{session track} that does the login at unitn.it website is this:
 
 \begin{lstlisting}[caption=Session track Unitn login]
