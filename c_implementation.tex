@@ -13,7 +13,7 @@ The components of the final tool can be seen in Figure \ref{fig:general_schema}.
 Every browser, one for each session, will be using a dedicated proxy, which will act like a Man-In-The-Middle attack from the browser to the server, establishing a secure connection only on the last part of the communication to the server, making possible to see plain HTTP communications on the browser side. Each browser will be supplied with the user actions which will be taken from the session tracks specified beforehand. It is also possible to do manual user actions on the browser, in case (for example) a captcha has to be resolved. Also, the session actions taken from the tests defined by the language can be supplied to the browser (for example to pause or stop it). The most important component of the tool is the Test Suite defined with the language, which is supplied to the plugin, and executed in ensemble with the sessions, giving eventually a result.
 
 \section{The tool}
-To implement the tool, I have decided to start from a work done by my colleague Wendy Barreto in her bachelor thesis \cite{wendy_barreto}, which realized a similar tool for Open Id Connect \Gls{OIDC} and \Gls{OAuth} SSO protocols, this was a good base to start with my implementation. The interface of \cite{wendy_barreto} has been taken and adapted to fit the needs of this work. The tool code is written in Java, I used the \Gls{burp}'s interface classes to interact with it.
+To implement the tool, I have decided to start from a work done by my colleague Wendy Barreto in her bachelor thesis \cite{wendy_barreto}, which realized a similar tool for Open Id Connect \gls{OIDC} and \gls{OAuth} SSO protocols, this was a good base to start with my implementation. The interface of \cite{wendy_barreto} has been taken and adapted to fit the needs of this work. The tool code is written in Java, I used the \Gls{burp}'s interface classes to interact with it.
 The standard usage of \Gls{burp} is based on the execution of a browser which connects to the \Gls{burp}'s proxy, in a way that all the packets can be intercepted, viewed or edited and forwarded or dropped from the \Gls{burp} interface. The tester would do some actions on the browser and watch the message flow in \Gls{burp} and then check them or edit them. With the tool the idea is the same, but the operation done on the browser and the checks or edits on the messages are made automatically, in a way that the tester does not have to do them by itself.
 
 \begin{figure}
@@ -28,7 +28,7 @@ In Figure \ref{fig:plugin_interface} the interface of the tool is shown, startin
     \item \textbf{Use Chrome} or \textbf{Use Firefox} the browser to be used can be selected
     \item \textbf{Select driver} the driver used to automate the actions on the browser can be selected
     \item \textbf{Record} the record button can be used to record the flowing messages
-    \item \textbf{Load messages} the load messages button can be used to load the previously saved messages to be tested "offline"
+    \item \textbf{Load messages} the load messages button can be used to load the previously saved messages to be tested offline
     \item \textbf{Offline mode} the offline mode button to test the loaded messages instead of the live ones
     \item \textbf{Execute track} used to execute the session track without executing the tests, useful when the unaltered messages has to be saved.
     \item \textbf{Test track} used to test the session track without saving or doing any test.
@@ -77,11 +77,6 @@ There still is a problem with the Oracle, where sometimes false positives or neg
 
 \subsection{Interface and user feedbacks}
 The interface of the tool is a bit raw, it is not very user-friendly, the user experience could be improved. During my work I did not focus my attention to these topics, but they are very important as the tool is not so easy to use. Also, the feedbacks of the errors encountered by the tool such as execution errors or others are not all shown to the user, this surely has to be fixed, making more clear to the end user what is going wrong.
-
-\subsection{Message filtering could be improved}
-The message filtering part of the language could be extended by the use of an AI, making it possible to define a more abstract filter that does not solely rely on the search of parameters or exact strings.
-
-
 
 
 

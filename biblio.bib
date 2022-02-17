@@ -1,11 +1,3 @@
-@misc{giulio_pellizzari,
-  author       = {Giulio Pellizzari},
-  school       = {Università degli Studi di Trento},
-  title        = {},
-  year         = {},
-  howpublished = {}
-}
-
 @misc{stefano_facchini,
   author       = {Stefano {F}acchini},
   school       = {Università degli Studi di Trento},
@@ -98,22 +90,32 @@
   note         = {Page 2, Last accessed 29/11/2021}
 }
 
-@misc{micro_id_gym,
-  author       = {FBK},
-  howpublished = {https://st.fbk.eu/tools/Micro-Id-Gym.html},
-  title        = {Micro-{I}d-{G}ym},
-  year         = {2020},
-  note         = {Last accessed 1/12/2021}
+@article{micro_id_gym,
+  title={Micro-Id-Gym: identity management workouts with container-based microservices},
+  author={Bisegna, Andrea and Carbone, Roberto and Martini, Ivan and Odorizzi, Valentina and Pellizzari, Giulio and Ranise, Silvio},
+  journal={Int. J. Inf. Secur. Cybercrime},
+  volume={8},
+  number={1},
+  pages={45--50},
+  year={2019}
 }
 
-@article{pkce_downgrade,
-  title={Proof key for code exchange by {OA}uth public clients},
-  author={Sakimura, Nat and Bradley, John and Agarwal, Naveen},
-  journal={Internet Engineering Task Force (IETF), Published Sep},
-  year={2015},
-  howpublished={https://datatracker.ietf.org/doc/html/draft-ietf-oauth-security-topics#section-4.8},
-  note={Page 28, last accessed 11/12/21}
+
+@misc{pkce_downgrade,
+	series =	{Request for Comments},
+	number =	7636,
+	howpublished =	{RFC 7636},
+	publisher =	{RFC Editor},
+	doi =		{10.17487/RFC7636},
+	url =		{https://www.rfc-editor.org/info/rfc7636},
+        author =	{Nat Sakimura and John Bradley and Naveen Agarwal},
+	title =		{{Proof Key for Code Exchange by OAuth Public Clients}},
+	pagetotal =	20,
+	year =		2015,
+	month =		sep,
+	abstract =	{OAuth 2.0 public clients utilizing the Authorization Code Grant are susceptible to the authorization code interception attack. This specification describes the attack as well as a technique to mitigate against the threat through the use of Proof Key for Code Exchange (PKCE, pronounced "pixy").},
 }
+
 
 @misc{pkce_explanation,
   title={Protecting Mobile Apps with {P}{K}{C}{E}},
@@ -151,5 +153,13 @@
   title={HTTP: the definitive guide},
   author={Gourley, David and Totty, Brian and Sayer, Marjorie and Aggarwal, Anshu and Reddy, Sailu},
   year={2002},
-  publisher={" O'Reilly Media, Inc."}
+  publisher={O'Reilly Media, Inc.}
+}
+
+@misc{pkce_msc_image,
+  author       = {Daniel Fett},
+  howpublished = {https://danielfett.de/2020/05/16/pkce-vs-nonce-equivalent-or-not/},
+  title        = {Downgrade Attack on PKCE},
+  year         = {},
+  note         = {Last visited 16/02/2022},
 }
