@@ -1,13 +1,10 @@
-\chapter{Conclusions and Future Works}
+\chapter{Conclusions and Future Work}
 \label{chap:Conclusions}
-The objective of this work, was to design and implement an automated tool that could execute security tests specified with a language, making it possible for the tester to use an already defined test suite, saving time, and being sure that all the tests for a specific protocol are done. This objective can be considered reached, the new tool and language are working, as can be seen in \cite{sofia_zanrosso}, in this case, all the necessary tests have been specified in the language, and have been executed, having the expected result. 
+The objective of this work, was to design and implement an automated tool that could execute security tests specified with a language, making it possible for the tester to use an already defined test suite, saving time, and being sure that all the tests for a specific protocol are done. This objective can be considered reached, the new tool and language are working, as can be seen in \cite{sofia_zanrosso}. In this case, all the necessary tests have been specified in the language, and have been executed, having the expected result. Also, the tool worked during the OAuth/OIDC testing phase, giving the same result as other compared software. 
 
-Still, it is not perfect in terms of stability and affidability, as a deep testing phase should be accomplished, but overall, the tool is functioning well.
+The software has still to be tested more deeply, as it was used just by me and in \cite{sofia_zanrosso}, this means that there could be some stability problems and some bugs not yet discovered. This could be fixed in future works, with all the problems and the limitations introduced in Section \ref{sec:limitations}. Some enhancements that could be added to the work could be the extension of the message filtering part of the language with the use of machine learning, making it possible to define a more abstract filter that does not solely rely on the search of parameters or exact strings. The message saving part of the software could be extended having different file formats, such as ".cap", this way the intercepted messages could then be imported into other software.
+Another thing is that the test definition language could be extended even for other uses, like for low-level networking protocols such as routing protocols, electronic trading protocols, IP protocols, and so on. Making it possible to search for known vulnerabilities in real-time or just by analyzing saved packets files. For example, a plugin for Wireshark software could be developed. 
 
-For future works, the problems and the limitations seen in Section \ref{sec:limitations} should be solved. The message filtering part of the language could be extended by the use of an AI, making it possible to define a more abstract filter that does not solely rely on the search of parameters or exact strings. Another thing is that the test definition language could be extended even for other uses, like for low-level networking protocols such as routing protocols, electronic trading protocols, IP protocols, and so on. Making it possible to search for known vulnerabilities in real-time or just by analyzing saved packets files. For example, a plugin for Wireshark software could be developed.
-% Save the messages in a .cap file instead of a txt
-%
-
-
+%più conclusioni di future works. Ripercorrere tutto, problemi, cosa ho fatto per risolverli.
 
 

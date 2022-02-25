@@ -11,22 +11,18 @@ A standard to follow while writing the tests had to be found, the first option w
 
 I want to introduce the language with an example. Due to its complexity, having a real example before the explanation of all its components could be helpful to understand their function.
 The scenario of this test is based on the presence of a web service hosted in a server (client), the victim, which is using a browser to connect to the client, the Authorization Server (AS) and the tester, that is doing a Man-In-The-Middle attack between the web service and the victim, and between the victim and the AS.
-%\begin{wrapfigure}{l}{0.6\textwidth}
-%    \includegraphics[width=0.9\linewidth]{pkce_downgrade.png}
-%    \caption{PKCE Downgrade. Source: Daniel Fett \cite{pkce_msc_image}}
-%    \label{fig:pkce_downgrade}
-%\end{wrapfigure}
-\begin{figure}
-    \includegraphics[width=\textwidth]{pkce_downgrade.png}
-    \caption{PKCE Downgrade. Source: Daniel Fett \cite{pkce_msc_image}}
-    \label{fig:pkce_downgrade}
-\end{figure}
 
 To understand this test, a brief introduction of \gls{PKCE} has to be done, \gls{PKCE} (Proof Key for Code Exchange) is an extension of the \gls{OAuth} protocol, as said in \cite{pkce_explanation}: \gls{PKCE}(pronounced pixie) extension describes a technique for public clients to mitigate the threat of having the authorization code intercepted. The technique involves the client first creating a secret, and then using that secret again when exchanging the authorization code for an access token. This way if the code is intercepted, it will not be useful, since the token request relies on the initial secret. 
 The \gls{PKCE} Downgrade test has as objective to test an \gls{OAuth} vulnerability were removing the parameter \texttt{code\_challenge} from the url of the authorization request message will be downgrading the authentication process in a way that \gls{PKCE} will not be used by the AS if the AS is vulnerable \cite{pkce_downgrade}. Making possible to the attacker to steal the authorization code from the AS. The message sequence chart of the attack can be seen in Figure \ref{fig:pkce_downgrade}.
 
 To test this, the browser will execute the victim's actions, doing a login on the client. The authorization request message has to be intercepted, the \texttt{code\_challenge} parameter has to be removed from it, and then the message has to be forwarded. The test is passed if the AS does not admit an exchange without PKCE, for instance, it can return an error page, which means that the AS is not vulnerable. Otherwise, if the AS would be vulnerable, the exchange would continue without any error pages or messages.
 The complete test can be found in Attachment \ref{chap:PKCE_complete}
+
+\begin{figure}[h]
+    \includegraphics[width=\textwidth]{pkce_downgrade.png}
+    \caption{PKCE Downgrade. Source: Daniel Fett \cite{pkce_msc_image}}
+    \label{fig:pkce_downgrade}
+\end{figure}
 
 \section{Language structure}
 Each part of the language is an Object, which is then written as a JSON Object in the language, that contains a series of name/value couples. The hierarchical structure of the language can be seen in Figure \ref{fig:language_structure}. An example of a Test Suite Object containing other Objects can be seen in Figure \ref{fig:language_structure_2}. In this section, all the Objects composing the language will be discussed.
