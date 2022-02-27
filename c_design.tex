@@ -1,6 +1,6 @@
 \chapter{Design of testing language}
 \label{chap:Design}
-This chapter introduces how the testing software (from now on tool) and the language introduced in Chapter \ref{chap:introduction} have been designed. The testing language specifies what a test does. A test is a series of verifications or modifications done on one or more HTTP messages (from now on messages) exchanged by the client and the service using the browser-based HTTP protocol. After the execution of a test, a check of the expected conditions has to be done, and the result has to be given to tell if the test has been successfully passed or not. The language will be defined based on all the possible actions that a security tester would need to do on the messages. 
+This chapter introduces how the testing software (from now on tool) and the language introduced in Chapter \ref{chap:introduction} have been designed. The testing language specifies what a test does. A test is a series of verifications or modifications done on one or more HTTP messages (from now on messages) exchanged by the client and the service using the browser-based protocol. After the execution of a test, a check of the expected conditions has to be done, and the result has to be given to tell if the test has been successfully passed or not. The language will be defined based on all the possible actions that a security tester would need to do on the messages. 
 One of the objectives was to think of a language that could specify the tests once and make it possible to test them over multiple web services. For example, a series of tests to verify the well-known vulnerabilities of a specific protocol could be defined and then used on any web service.
 
 \section{Choosing a language standard}
@@ -41,23 +41,21 @@ The Test Suite is the main Object which contains all the other ones, it has thes
     \item \textbf{description}, the description of the test suite
     \item \textbf{tests}, which is a list containing the tests to be executed
 \end{itemize}
-To implement the \gls{PKCE} test example above, the Test Suite can be defined in this way:
+To implement the \gls{PKCE} test example above, the Test Suite can be defined as shown in Listing \ref{lst:test_suite_definition}. The Test Suite Object is a JSON object having the tag \textbf{test suite}, with name and description, and a tag \textit{tests} which will contain a list of Test Objects.
 
 \begin{lstlisting}[language=json, caption=Test Suite definition, label={lst:test_suite_definition}]
-{
-    "test suite": {
-        "name": "OAuth active tests",
-        "description": "A test suite containing a OAuth test"
-    },
-    "tests": [
-        {
-            // A test
-        }
-    ]
-}
+    {
+        "test suite": {
+            "name": "OAuth active tests",
+            "description": "A test suite containing a OAuth test"
+        },
+        "tests": [
+            {
+                // A test
+            }
+        ]
+    }
 \end{lstlisting}
-
-As shown in Listing \ref{lst:test_suite_definition}, the Test Suite Object is a JSON object having the tag \textbf{test suite}, with name and description, and a tag \textit{tests} which will contain a list of Test Objects.
 
 \subsection{Test}
 Following the hierarchical order, the Test object is the one that actually defines a test. As said earlier, a test is contained in a Test Suite, and contains various tags to be defined:
@@ -278,7 +276,7 @@ Following the example from Section \ref{sec:pkce_downgrade} the definition of th
 When used, this message type will search for the parameter \texttt{response\_type} in the url of every request message. When a match is found, the Operation in which this Message Type is used will be executed.
 
 \section{The oracle}
-The ensemble of all parts of the language that decide the result of the tests is called Oracle,
+The set of all parts of the language that decide the result of the tests is called Oracle,
 which decides whether a test should be considered passed or failed (or not applicable). I decided to build the oracle in a way that it can be almost fully customized by the user. 
 The oracle is based on three main components:
 \begin{itemize}
@@ -287,7 +285,7 @@ The oracle is based on three main components:
     \item Evaluation of the Validate objects
 \end{itemize}
 If all the above conditions are met, the test is considered passed. Otherwise, it is considered failed (or not applicable).
-The oracle can be built for example, by using Validate objects to verify that some intercepted messages satisfy some conditions like having a particular parameter or string in them.
+The oracle can be built, for example, by using Validate objects to verify that some intercepted messages satisfy some conditions like having a particular parameter or string in them.
 
 To build the oracle for the \gls{PKCE} example mentioned in Section \ref{sec:pkce_downgrade}, both the result of the test and the precondition has been used, specifically, the precondition part is shown in Listing \ref{lst:precondtion}
 \begin{lstlisting}[language=json, caption=Precondition definition, label={lst:precondtion}]
