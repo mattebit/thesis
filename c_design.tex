@@ -1,7 +1,7 @@
 \chapter{Design of the testing language}
 \label{chap:Design}
 This chapter introduces how the testing software (from now on tool) and the language introduced in Chapter \ref{chap:introduction} have been designed. The testing language specifies what a test does. A test is a series of verifications or modifications done on one or more HTTP messages (from now on messages) exchanged by the client and the service using the browser-based protocol. After the execution of a test, a check of the expected conditions has to be done, and the result has to be given to tell if the test has been successfully passed or not. The language will be defined based on all the possible actions that a security tester would need to do on the messages. 
-One of the objectives was to think of a language that could specify the tests once and make it possible to test them over multiple web services. For example, a series of tests to verify the well-known vulnerabilities of a specific protocol could be defined and then used on any web service.
+One of the objectives was to think of a language that could specify the tests once and make it possible to test them against multiple web services. For example, a series of tests to verify the well-known vulnerabilities of a specific protocol could be defined and then used on any web service.
 
 \section{Choosing a language standard}
 A standard to follow while writing the tests had to be found; the first option was to define a formal language with its dedicated parser, this option was discarded, as it was challenging to implement and other already existing alternatives were available. 
@@ -13,7 +13,7 @@ The one that has been chosen is JSON (JavaScript Object Notation), which allows 
     \label{fig:pkce_downgrade}
 \end{figure}
 
-\section{Example: PKCE Downgrade Test}
+\section{Example: PKCE Downgrade Test} 
 \label{sec:pkce_downgrade}
 
 I want to introduce the language with an example. Due to its complexity, having a concrete example before explaining all its components could be helpful to understand its function.
@@ -21,18 +21,12 @@ The scenario of this test is based on the presence of a web service hosted in a 
  
 The \gls{PKCE} Downgrade test has as objective to test an \gls{OAuth} vulnerability were removing the parameter \texttt{code\_challenge} from the url of the authorization request message will be downgrading the authentication process in a way that \gls{PKCE} will not be used by the AS if the AS is vulnerable \cite{pkce_downgrade}. This will allow the attacker to steal the authorization code from the AS. The message sequence chart of the attack can be seen in Figure \ref{fig:pkce_downgrade}.
 
-To test this, the browser will execute the victim's actions, doing a login on the client. The authorization request message has to be intercepted, the \texttt{code\_challenge} parameter has to be removed from it, and then the message has to be forwarded. The test is passed if the AS does not admit an exchange without PKCE; for instance, it can return an error page, which means that the AS is not vulnerable. Otherwise, if the AS would be vulnerable, the exchange would continue without any error pages or messages.
+To test this, the browser will execute the victim's actions, doing a login on the client. The authorization request message has to be intercepted, the \texttt{code\_challenge} parameter has to be removed from it, and then the message has to be forwarded. The test is passed if the AS does not admit an exchange without PKCE; for instance, it can return an error page, which means that the AS is not vulnerable. Otherwise, if the AS is vulnerable, the exchange would continue without any error pages or messages.
 The complete test can be found in Attachment \ref{chap:PKCE_complete}
 
 
 \section{Language structure}
 Each part of the language is an Object, which is then written as a JSON Object in the language that contains a series of name/value couples. The hierarchical structure of the language can be seen in Figure \ref{fig:language_structure}. An example of a Test Suite Object containing other Objects can be seen in Figure \ref{fig:language_structure_2}. In this section, all the Objects composing the language will be discussed.\\
-
-\begin{figure}
-    \includegraphics[width=\textwidth]{language_structure.png}
-    \caption{Language structure}
-    \label{fig:language_structure}
-\end{figure}
 
 \subsection{Test Suite}
 The Test Suite is the main Object which contains all the other ones, it has these tags:
@@ -57,6 +51,12 @@ To implement the \gls{PKCE} test example above, the Test Suite can be defined as
         ]
     }
 \end{lstlisting}
+
+\begin{figure}[h]
+    \includegraphics[width=0.9\textwidth]{language_structure.png}
+    \caption{Language structure}
+    \label{fig:language_structure}
+\end{figure}
 
 \subsection{Test}
 Following the hierarchical order, the Test object is the one that actually defines a test. As said earlier, a test is contained in a Test Suite, and contains various tags to be defined:
@@ -88,7 +88,7 @@ Following the \gls{PKCE} example introduced in Section \ref{sec:pkce_downgrade},
         "result": "incorrect flow s1"
     }
 }    
-\end{lstlisting}
+\end{lstlisting} 
 
 As can be seen in Listing \ref{lst:active_test_definition}, the test is specified, writing its type, which is active, as it has to edit a message removing a parameter from the url. Moreover, a session and a list of Operations to be executed are added. The result of the test is also specified.
 
@@ -99,7 +99,6 @@ As can be seen in Listing \ref{lst:active_test_definition}, the test is specifie
     \caption{language structure}
     \label{fig:language_structure_2}
 \end{wrapfigure}
-
 The Operation Object defines the actions that a test has to do. As shown in the language structure in Figure \ref{fig:language_structure}, an operation could be either a \textbf{standard operation} or a \textbf{session config operation}, the latter is used to manage the sessions for the active tests (i.e. start, stop, pause them). Depending on the type of test in which an Operation is defined, the standard Operation becomes active or passive.
 In both cases, an operation has to contain the \textbf{message type} which defines the type of message to be intercepted in that particular Operation (more info in the dedicated paragraph).
 \\A \textbf{passive} operation has as objective to verify the presence (or absence) of some text or parameters in the intercepted message. To do this, it should contain one of the following options:
@@ -107,6 +106,7 @@ In both cases, an operation has to contain the \textbf{message type} which defin
     \item A list of \textbf{Check} Objects, which are then executed to check the presence (or absence) of some text or parameter
     \item A \textbf{regex} inspection, which executes an inspection considering the intercepted message as plain text and executing a regex over it; if the regex has a match, the Operation is considered passed, otherwise failed. Note that when a regex is used, it has to be also specified the \textbf{message section} over which to execute it (body, head, url)
 \end{itemize}
+
 
 If the Test Object where the operations are defined is an \textbf{active} test, also, if the intercepted messages need to be manipulated, an active Operation has to be defined. It is composed by:
 \begin{itemize}
@@ -153,7 +153,7 @@ The Check Object is defined by:
     \item \textbf{in}, where to search the given parameter. The possible value is \textit{head}, \textit{body} or \textit{url}
     \item \textbf{check param}, specifies the parameter name to be searched
 \end{itemize}
-Also, the actual checks on the parameter value have to be defined: (if none of these are defined, the Check will only check if the given parameter is present or not in the given section)
+Also, the actual checks on the parameter value have to be defined: (if none of these is defined, the Check will only check if the given parameter is present or not in the given section)
 \begin{itemize}
     \item \textbf{is}, checks that the parameter value is exactly what is passed to this tag
     \item \textbf{not is}, checks that the parameter value is not what is passed to this tag
@@ -173,7 +173,7 @@ In an Operation Object, the only way to use Check objects is by setting the \tex
 In order to do this, the Validate Operation with a list of checks or a regex (exactly like in passive tests) can be used.
 
 \subsection{Save}
-A message or a string can be saved by the use of the tag \textbf{save}. This can be used both in an Operation to save an entire message or in a Message Operation to save the value of a found parameter. So a variable can be a message-type variable, containing an entire saved message or a string-type containing a string.
+A message or a string can be saved by the use of the tag \textbf{save}. This can be used both in an Operation to save an entire message or in a Message Operation to save the value of a found parameter. So a variable can be a message-type variable containing an entire saved message or a string-type containing a string.
 There are two ways of using the value of a variable which depends on its type:
 \begin{itemize}
     \item Using a \textbf{message-type} variable: it can be used in an Operation with the tag \textbf{action} set to intercept. There is the possibility of using \textbf{replace request} (or \textbf{replace response}) tag giving the name of the variable. This will replace the intercepted message's request (or response) with the message saved in the variable.
@@ -278,7 +278,7 @@ When used, this message type will search for the parameter \texttt{response\_typ
 
 \section{The oracle}
 The set of all parts of the language that decide the result of the tests is called Oracle,
-which decides whether a test should be considered passed or failed (or not applicable). I decided to build the oracle in a way that it can be almost fully customized by the user. 
+which decides whether a test should be considered passed or failed (or not applicable). I decided to build the oracle so that the user can almost fully customize it. 
 The oracle is based on three main components:
 \begin{itemize}
     \item Evaluation of the complete (or incomplete) execution of the \gls{session track} 

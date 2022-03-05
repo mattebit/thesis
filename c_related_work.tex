@@ -2,6 +2,9 @@
 \label{chap:Related_work}
 This chapter will describe software and tools related to the work in this thesis.
 
+\section{Domain Specific Language}
+The language introduced in this thesis used to specify tests can be viewed as a Domain-Specific Language, which is a computer language specialized to a particular application domain \cite{wikipedia_dsl}. More specifically, it falls under the class of Embedded Domain-Specific Modelling Languages. Embedded (or Internal) Domain-Specific Languages are typically implemented within a host language as a library and tend to be limited to the syntax of the host language, though this depends on host language capabilities \cite{wikipedia_dsl}. The language in this work is hosted by JSON, having all the tests encoded in it. The encoded JSON is then parsed, and the fields are interpreted as Burp's API calls.
+
 \section{Micro-Id-Gym}
 \label{sec:micro-id-gym}
 Micro ID Gym (MIG) ``aims to assist system administrators and testers in the deployment and pen-testing of IdM protocol instances" - \cite{micro_id_gym}, inside this tool, two pentesting tools can be found:
@@ -28,6 +31,7 @@ Some of these limitations were stated as future works in \cite{wendy_barreto}. A
 
 Previously in this thesis, it has been said that part of this work has been taken as a base to start with the implementation of the tool. The idea of a language that could be used for any test over browser-based protocols was born when I used her plugin, which was limited to \gls{OAuth} and \gls{OIDC} tests. I wanted to enlarge the possible tests to be defined without a restriction on a specific protocol. 
 One of the things that have been used is the interface of the plugin, which has been modified, adding buttons and tabs to deal with multiple \gls{session track}s and other added functionalities. Also, the automation of the \gls{session track} was taken and edited. This part was already used in \cite{claudio_grisenti,stefano_facchini}.
+
 
 
 

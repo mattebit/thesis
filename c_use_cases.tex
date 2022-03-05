@@ -5,7 +5,7 @@
 Once the language and the approach to execute the tests have been defined and implemented, the tool has been applied to two different scenarios of IdM protocols, OAuth and SAML. In the end, two test suite has been defined, one for each protocol, that are ready to be used. This chapter will describe how this was done.
 
 \section{OAuth \& OIDC Use-Case}    
-To test the tool and the language during development, there was the need to specify a test suite to evaluate the correctness of their results. This was done starting from two works \cite{claudio_grisenti,wendy_barreto} that aimed at defining a set of tests to be done to test OAuth and OIDC protocols in a way that well-known vulnerabilities would be avoided. These two works have been chosen because the tests they present are the result of a deep examination. The \gls{OAuth} and \gls{OIDC} tests defined and used in \cite{claudio_grisenti,wendy_barreto} has then be re-defined in the language. Due to the newly available functionalities introduced with the language, new tests have been specified, especially active ones. In total, 7 active tests and 11 passive tests built the OAuth/OIDC test suite. These tests aim at testing the services over the well-known vulnerabilities to find out if the services are vulnerable. One of them can be found in Section \ref{sec:pkce_downgrade}. The complete list of tests with a brief description can be found in Table \ref{tab:OAuth_test_suite}.
+To test the tool and the language during development, there was the need to specify a test suite to evaluate the correctness of their results. This was done starting from two works \cite{claudio_grisenti,wendy_barreto} that aimed at defining a set of tests to be done to test OAuth and OIDC protocols in a way that well-known vulnerabilities would be avoided. These two works have been chosen because the tests they present result from a deep examination. The \gls{OAuth} and \gls{OIDC} tests defined and used in \cite{claudio_grisenti,wendy_barreto} has then be re-defined in the language. Due to the newly available functionalities introduced with the language, new tests have been specified, especially active ones. In total, 7 active tests and 11 passive tests built the OAuth/OIDC test suite. These tests aim at testing the services against the well-known vulnerabilities to find out if the services are vulnerable. One of them can be found in Section \ref{sec:pkce_downgrade}. The complete list of tests with a brief description can be found in Table \ref{tab:OAuth_test_suite}.
 %Dove l'abbiamo testato? quanti test attivi e quanti passivi? Cosa verificano? riportare un esempio magari? Citare che l'esempio del design c'è un test. Eseguito su un ambiente di test. Dove ho preso i test magari? è stato difficile tradurli? magari riportare un esecuzione del test (?). Tabella con tutti i test negli allegati o nella tesi. Esempio con un test magari. Spiego come ho tradotto i test.
 
 \begin{table}[h]
@@ -13,24 +13,25 @@ To test the tool and the language during development, there was the need to spec
         \hline
         Test                                   & Type         & Description                             \\
         \hline\hline
-        CSRF protection (remove state)          & Active        & Tries to remove state parameter \\
-        CSRF protection (edit state)    &   Active  &   Tries to edit state parameter\\
-        PKCE Downgrade                  &   Active  &   Tries to remove code\_challenge parameter \\
-        PKCE plain supported            &   Active  &   Tries to remove code\_challenge\_method parameter \\
-        Redirect uri subdomain          &   Active  &   Tries to edit the redirect uri with subdomain \\
-        Redirect uri external domain    &   Active  &   Tries to edit the redirect uri with external domain \\
+        -CSRF protection (remove state)          & Active        & Tries to remove state parameter \\
+        -CSRF protection (edit state)    &   Active  &   Tries to edit state parameter\\
+        -PKCE Downgrade                  &   Active  &   Tries to remove code\_challenge parameter \\
+        -PKCE plain supported            &   Active  &   Tries to remove code\_challenge\_method parameter \\
+        -Redirect uri subdomain          &   Active  &   Tries to edit the redirect uri with subdomain \\
+        -Redirect uri external domain    &   Active  &   Tries to edit the redirect uri with external domain \\
         State parameter replay          &   Active  &   Replay the parameter state from a session to another \\
         Parameter state is used         &   Passive  &   Check for the presence of the parameter state in \\
-        Compliance to Standard          &   Passive  &   Checks the presence of client\_id and response\_type\\
-        PKCE is implemented             &   Passive &   Check for common params presence \\
+        -Compliance to Standard          &   Passive  &   Checks the presence of client\_id and response\_type\\
+        -PKCE is implemented             &   Passive &   Check for common params presence \\
         PKCE method is not plain        &   Passive &   Check if param code\_challenge\_method=plain \\
-        Prevent clickjacking            &   Passive &   Check the headers values \\
-        Open redirectors: HTTP 307      &   Passive &   Check for 307 redirect \\
-        Block for Referrer header is used  &    Passive &   Checks for common parameters presence \\
-        Token saved as cookie in plain  &   Passive &   Check for the header cookie and search for token in it\\
+        -Prevent clickjacking            &   Passive &   Check the headers values \\
+        -Open redirectors: HTTP 307      &   Passive &   Check for 307 redirect \\
+        -Block for Referrer header is used  &    Passive &   Checks for common parameters presence \\
+        -Token saved as cookie in plain  &   Passive &   Check for the header cookie and search for token in it\\
         Client\_id is present            &   Passive &   Check for client\_id in all requests url \\
         Implicit grant not used         &   Passive &   Check for response\_type parameter \\ 
         Password credential\ grant not used  &   Passive &   Check for response\_type parameter \\
+
         \hline
     \end{tabular}
     \caption{\label{tab:OAuth_test_suite}OAuth/OIDC test suite}
@@ -45,6 +46,9 @@ During the last stages of the development and testing of the tool, a strict coll
 \end{itemize}
 In the end, it has been possible to define all the necessary tests and to execute them to test the services.
 
+\section{Expirience during the use of the language}
+Experience during the use of the language.
+Many tests have been translated or defined into the language during the two preceding case studies. This has not been difficult to do. In total, 18 tests for OAuth and 86 tests for SAML have been defined. The process of defining or translating a test involves the identification of the messages to be intercepted, the actions to be done on them, how many sessions are needed, and the parts of the messages to be checked to give a result of the test. Once these four main components have been identified, the next step is to declare everything from the Message Type to the checks. The most difficult part is probably the definition of a Message Type to intercept a message, as it is sometimes difficult to filter the messages.
 
 
 
