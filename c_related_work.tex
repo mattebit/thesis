@@ -9,8 +9,8 @@ The language introduced in this thesis used to specify tests can be viewed as a 
 \label{sec:micro-id-gym}
 Micro ID Gym (MIG) ``aims to assist system administrators and testers in the deployment and pen-testing of IdM protocol instances" - \cite{micro_id_gym}, inside this tool, two pentesting tools can be found:
 \begin{itemize}
-    \item MIG - OAuth/OIDC \cite{claudio_grisenti}
-    \item MIG - SAML SSO \cite{stefano_facchini}
+    \item MIG - OAuth/OIDC \cite{claudio_grisenti}.
+    \item MIG - SAML SSO \cite{stefano_facchini}.
 \end{itemize}
 They are both plugins for \Gls{burp}, which have as objective to test the two different protocols. These plugins execute a series of actions on a browser, check the messages in the background, and then provide a result.
 These two plugins are related to mine, but they are specifically created and defined to test SSO protocols only, and the tests they used are fixed and cannot be easily edited. If a new test has to be implemented, the plugin must be recompiled.
@@ -19,13 +19,13 @@ These two plugins are related to mine, but they are specifically created and def
 The preceding two tools of MIG found in Section \ref{sec:micro-id-gym} have been improved by the work done by my colleague Wendy Barreto \cite{wendy_barreto} in her bachelor thesis at Università di Trento to test \gls{OAuth} and \gls{OIDC} SSO protocols with a custom test definition pattern. Her work aimed to fix the problem of hard-coded tests in the plugins for SSO protocols testing. The previous MIG plugin had been improved by removing the staticity of the test, adding the possibility to define all the tests with the use of a JSON language.
 The available test actions worked well, but there were some limitations on the possible actions, especially in active tests. For example:
 \begin{itemize}
-    \item Limited oracle for the verification of active tests, having just the verification of the correct execution of the operation and a check for the string ``error" on the last page of the browser
-    \item The filtering of the message to check or edit for static tests is limited, only \textit{Authorization grant message}, \textit{Response messages}, \textit{Request messages} and \textit{All messages} are available
-    \item Only regex are supported to search what is needed in a message
-    \item Impossibility to work over encoded parameters
-    \item Impossibility of doing multiple operations on a single message
-    \item Impossibility of saving a parameter and using it somewhere else
-    \item Impossibility of using multiple sessions in a test
+    \item Limited oracle for the verification of active tests, having just the verification of the correct execution of the operation and a check for the string ``error" on the last page of the browser.
+    \item The filtering of the message to check or edit for static tests is limited, only \textit{Authorization grant message}, \textit{Response messages}, \textit{Request messages} and \textit{All messages} are available.
+    \item Only regex are supported to search what is needed in a message.
+    \item Impossibility to work over encoded parameters.
+    \item Impossibility of doing multiple operations on a single message.
+    \item Impossibility of saving a parameter and using it somewhere else.
+    \item Impossibility of using multiple sessions in a test.
 \end{itemize}
 Some of these limitations were stated as future works in \cite{wendy_barreto}. A complete list of differences between the two languages and tools can be found in Attachment \ref{attachment:languages_comparison}.
 

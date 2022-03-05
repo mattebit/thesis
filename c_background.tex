@@ -13,10 +13,10 @@ In this thesis, the word ``name" identifying a name/value pair will not be used 
 Regex stands for regular expression, it is a sequence of symbols that define a group of strings that can be matched. There is a list of symbols that can specify which characters to match. For example, if the value of the ``Host" header in a message has to be found, a regex like this one has to be defined: \verb|Host:\s?.*|
 This regex will search for the string ``Host:" followed by 0 or 1 whitespace, and all the characters that follow until ``\verb|\n|" is found. This is a complete explanation of the symbols used in this example:
 \begin{itemize}
-    \item \verb|\s| is the whitespace character
-    \item \textbf{?} is an operator that tells that the preceding symbol will be matched 0 or 1 times
-    \item \textbf{*} is an operator that tells that the preceding symbol will be matched 0 or more times
-    \item \textbf{.} matches any character except line breaks
+    \item \verb|\s| is the whitespace character.
+    \item \textbf{?} is an operator that tells that the preceding symbol will be matched 0 or 1 times.
+    \item \textbf{*} is an operator that tells that the preceding symbol will be matched 0 or more times.
+    \item \textbf{.} matches any character except line breaks.
 \end{itemize}
 
 \section{IdM protocols: SAML and OAuth}
@@ -44,9 +44,9 @@ A series of messages must be exchanged between the two parties to authenticate a
 As stated in \cite{pkce_downgrade}: OAuth 2.0 public clients utilizing the Authorization Code Grant are susceptible to the authorization code interception attack. A technique to mitigate against the threat is the use of Proof Key for Code Exchange (PKCE, pronounced ``pixy"). The PKCE extension utilizes a dynamically created cryptographically random key called \texttt{code\_verifier}. A unique \texttt{code\_verifier} is created for every authorization request, and its transformed value, called \texttt{code\_challenge}, is sent to the authorization server to obtain the authorization code. The authorization code obtained is then sent to the token endpoint with the \texttt{code\_verifier}, and the server compares it with the previously received request code so that it can perform the proof of possession of the \texttt{code\_verifier} by the client. This works as the mitigation since the attacker would not know this one-time key since it is sent over TLS and cannot be intercepted.
 The PKCE specification adds additional parameters to the OAuth 2.0 Authorization and Access Token Requests:
 \begin{enumerate}[(A)]
-    \item The client creates and records a secret named the \texttt{code\_verifier} and derives a transformed version t(\texttt{code\_verifier}) (referred to as the \texttt{code\_challenge}), which is sent in the OAuth 2.0 Authorization Request along with the transformation method ``t\_m". 
-    \item The Authorization Endpoint responds as usual but records t(\texttt{code\_verifier}) and the transformation method. 
-    \item The client then sends the authorization code in the Access Token Request as usual but includes the \texttt{code\_verifier} secret generated at (A). 
+    \item The client creates and records a secret named the \texttt{code\_verifier} and derives a transformed version t(\texttt{code\_verifier}) (referred to as the \texttt{code\_challenge}), which is sent in the OAuth 2.0 Authorization Request along with the transformation method ``t\_m".
+    \item The Authorization Endpoint responds as usual but records t(\texttt{code\_verifier}) and the transformation method.
+    \item The client then sends the authorization code in the Access Token Request as usual but includes the \texttt{code\_verifier} secret generated at (A).
     \item The authorization server transforms \texttt{code\_verifier} and compares it to t(\texttt{code\_verifier}) from (B).  Access is denied if they are not equal.
 \end{enumerate}
 An attacker who intercepts the authorization code at (B) is unable to redeem it for an access token, as they do not own the \texttt{code\_verifier} secret.

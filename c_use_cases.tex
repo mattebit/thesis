@@ -13,21 +13,21 @@ To test the tool and the language during development, there was the need to spec
         \hline
         Test                                   & Type         & Description                             \\
         \hline\hline
-        -CSRF protection (remove state)          & Active        & Tries to remove state parameter \\
-        -CSRF protection (edit state)    &   Active  &   Tries to edit state parameter\\
-        -PKCE Downgrade                  &   Active  &   Tries to remove code\_challenge parameter \\
-        -PKCE plain supported            &   Active  &   Tries to remove code\_challenge\_method parameter \\
-        -Redirect uri subdomain          &   Active  &   Tries to edit the redirect uri with subdomain \\
-        -Redirect uri external domain    &   Active  &   Tries to edit the redirect uri with external domain \\
+        CSRF protection (remove state)          & Active        & Tries to remove state parameter \\
+        CSRF protection (edit state)    &   Active  &   Tries to edit state parameter\\
+        PKCE Downgrade                  &   Active  &   Tries to remove code\_challenge parameter \\
+        PKCE plain supported            &   Active  &   Tries to remove code\_challenge\_method parameter \\
+        Redirect uri subdomain          &   Active  &   Tries to edit the redirect uri with subdomain \\
+        Redirect uri external domain    &   Active  &   Tries to edit the redirect uri with external domain \\
         State parameter replay          &   Active  &   Replay the parameter state from a session to another \\
         Parameter state is used         &   Passive  &   Check for the presence of the parameter state in \\
-        -Compliance to Standard          &   Passive  &   Checks the presence of client\_id and response\_type\\
-        -PKCE is implemented             &   Passive &   Check for common params presence \\
+        Compliance to Standard          &   Passive  &   Checks the presence of client\_id and response\_type\\
+        PKCE is implemented             &   Passive &   Check for common params presence \\
         PKCE method is not plain        &   Passive &   Check if param code\_challenge\_method=plain \\
-        -Prevent clickjacking            &   Passive &   Check the headers values \\
-        -Open redirectors: HTTP 307      &   Passive &   Check for 307 redirect \\
-        -Block for Referrer header is used  &    Passive &   Checks for common parameters presence \\
-        -Token saved as cookie in plain  &   Passive &   Check for the header cookie and search for token in it\\
+        Prevent clickjacking            &   Passive &   Check the headers values \\
+        Open redirectors: HTTP 307      &   Passive &   Check for 307 redirect \\
+        Block for Referrer header is used  &    Passive &   Checks for common parameters presence \\
+        Token saved as cookie in plain  &   Passive &   Check for the header cookie and search for token in it\\
         Client\_id is present            &   Passive &   Check for client\_id in all requests url \\
         Implicit grant not used         &   Passive &   Check for response\_type parameter \\ 
         Password credential\ grant not used  &   Passive &   Check for response\_type parameter \\
@@ -40,9 +40,9 @@ To test the tool and the language during development, there was the need to spec
 \section{SAML Use-Case}
 During the last stages of the development and testing of the tool, a strict collaboration between my colleague Sofia Zanrosso and me has started. Her objective was to create a \gls{SAML} Test Suite to facilitate automatic penetration testing over \gls{SAML} \cite{sofia_zanrosso}. The tool defined in this thesis was compared with other ones and was used to define and execute the tests. During the progress of both our works, a lot of feedback and bugs have been reported to me, speeding up the testing phase of the tool. At the same time, we found that my tool was in some respects better compared to the other alternatives. For example:
 \begin{itemize}
-    \item Other plugins were giving false positives on some tests
-    \item ``the previously employed transition times between tools have been greatly reduced"
-    \item ``making it possible to analyze almost completely the vulnerabilities of the tested subjects"
+    \item Other plugins were giving false positives on some tests.
+    \item ``the previously employed transition times between tools have been greatly reduced".
+    \item ``making it possible to analyze almost completely the vulnerabilities of the tested subjects".
 \end{itemize}
 In the end, it has been possible to define all the necessary tests and to execute them to test the services.
 
